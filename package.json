@@ -38,10 +38,10 @@
     "node": ">= 0.8.0"
   },
   "scripts": {
-    "test": "karma start spec/karma.conf.js",
-    "test-node": "jasmine-node spec",
+    "test": "jasmine-node spec",
+    "test-dev": "karma start spec/karma.conf.js",
     "min": "java -jar compiler.jar --compilation_level ADVANCED_OPTIMIZATIONS < p2peg.js > p2peg.min.js",
-    "build": "min",
+    "build": "node build.js",
     "compiler": "curl http://dl.google.com/closure-compiler/compiler-latest.tar.gz | tar -xz compiler.jar",
     "doc": "docco p2peg.js"
   },
