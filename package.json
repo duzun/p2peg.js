@@ -33,10 +33,20 @@
   "bugs": {
     "url": "https://github.com/duzun/p2peg.js/issues"
   },
-  
+
+  "license": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/duzun/p2peg.js/raw/master/LICENSE"
+    }
+  ],
+
+  "readmeFilename": "README.md",
+
   "engines": {
     "node": ">= 0.8.0"
   },
+
   "scripts": {
     "test": "jasmine-node spec",
     "test-dev": "karma start spec/karma.conf.js",
@@ -45,13 +55,7 @@
     "compiler": "curl http://dl.google.com/closure-compiler/compiler-latest.tar.gz | tar -xz compiler.jar",
     "doc": "docco p2peg.js"
   },
-  "license": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/duzun/p2peg.js/raw/master/LICENSE"
-    }
-  ],
-  "readmeFilename": "README.md",
+
   "devDependencies": {
     "docco"                   : "0.6.x",
     "jasmine-core"            : "2.1.x",
