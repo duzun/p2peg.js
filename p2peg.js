@@ -1,14 +1,16 @@
 /**
  *  This file is under develoment.
  *
- *  @TODO: all ???
+ *  @TODO:
+ *  *  all ???
+ *  *  API: https://developer.mozilla.org/en-US/docs/Web/API/RandomSource.getRandomValues
+ *  *  clb: http://jsonlib.appspot.com/urandom?callback=p2peg.seed
+ *  *  XHR: https://www.random.org/integers/?num=256&min=0&max=255&col=1&base=16&format=plain&rnd=new
  *
  *  @requires sha1, sha512, base64
  *
  *  @author DUzun.Me
  */
-
-console.log(this === global)
 
 ;(function $_P2PEG(name, root, FUNCTION, String, Object, Date, Math) {
     'use strict';
@@ -40,7 +42,7 @@ console.log(this === global)
                     ? ! perf
                         ? function () { return now() % 1e3; }
                         : function () { return ((perf.now() * 1e3)|0) % 1e6; }
-                    : function () { return process.hrtime(x)[1] }
+                    : function () { return process.hrtime()[1] }
 
     ,   hrtime = proc
                     ? function (x) { return x ? process.hrtime(x) : process.hrtime(); }
@@ -76,9 +78,9 @@ console.log(this === global)
         ['require', 'module', './lib/sha1', './lib/sha512', './lib/base64']
         , function factory(require, module, sha1, sha512, base64) {
             // -------------------------------------------------
-            if(!sha1)   sha1   = require('sha1');
-            if(!sha512) sha512 = require('sha512');
-            if(!base64) base64 = require('base64');
+            if(!sha1)   sha1   = require('./lib/sha1');
+            if(!sha512) sha512 = require('./lib/sha512');
+            if(!base64) base64 = require('./lib/base64');
 
             var noop = function () {};
 
@@ -295,7 +297,7 @@ console.log(this === global)
                 ;
 
                 if ( _entr == undefined ) {
-                    var _el = 0, t;
+                    var _el = 0, t, s;
                     _entr = {}
 
                     _entr[packFloat(start_hr.join('.'))] = 'start';
@@ -305,25 +307,28 @@ console.log(this === global)
 
                     }
 
-                    if ( typeof navigator != 'undefined' && navigator ) {
-                        var nav = navigator;
-                        _entr[nav.userAgent || nav.appVersion] = ++_el;
-                        if ( t = nav.productSub ) _entr[t] = ++_el;
-                        if ( t = nav.languages ) _entr[t] = ++_el;
-                        if ( (t = nav.plugins) && t.length ) {
+                    if ( s = root.navigator ) {
+                        _entr[s.userAgent || s.appVersion] = ++_el;
+                        if ( t = s.productSub ) _entr[t] = ++_el;
+                        if ( t = s.languages ) _entr[t] = ++_el;
+                        if ( (t = s.plugins) && t.length ) {
                             each(t, function (i,p) {
                                 _entr[p.description] = ++_el;
                                 _entr[p.name] = ++_el;
                                 _entr[p.filename] = ++_el;
-                            })
+                            });
                         }
                     }
 
-                    if ( typeof document != 'undefined' ) {
-                        if ( t = document.cookie ) _entr[t] = ++_el;
-                        if ( t = document.doctype ) _entr[t] = ++_el;
-                        if ( t = document.domain ) _entr[t] = ++_el;
-                        if ( t = document.location ) _entr[t.href] = ++_el;
+                    if ( s = root.screen ) {
+                        each(s, function (i,p) { _entr[p||i] = _el });
+                    }
+
+                    if ( s = root.document ) {
+                        if ( t = s.cookie )   _entr[t] = ++_el;
+                        if ( t = s.doctype )  _entr[t] = _el;
+                        if ( t = s.domain )   _entr[t] = _el;
+                        if ( t = s.location ) _entr[t.href] = _el;
                     }
 
                     // _entr might containt sensitive data (ex. cookie)
@@ -352,7 +357,12 @@ console.log(this === global)
                     // if ( t = getlastmod() ) _entr[packInt(t)] = 'lastmod';
 
                     if(crypto && crypto.randomBytes) {
-                        _entr[crypto.randomBytes(32)] = ++_el;
+                        _entr[arr2str(crypto.randomBytes(32))] = ++_el;
+                    }
+
+                    if ( (s = root.crypto) && (s = s.getRandomValues) ) {
+                        root.crypto.getRandomValues(t = new Uint8Array(64));
+                        _entr[arr2str(t)] = ++_el;
                     }
 
                     _entr = keys(_entr).join('');
@@ -396,7 +406,9 @@ console.log(this === global)
                 _self.rs_w = rs_w;
                 _self.rs_z = rs_z;
 
-                return ret;
+                // handle overflow:
+                // in JS at overflow (int32) -> (float)
+                return ret | 0;
             }
 
             proto.saveState = function saveState(sf) {
@@ -422,6 +434,7 @@ console.log(this === global)
             var ceil  = Math.ceil;
 
             var chr = String.fromCharCode;
+            var arr2str = function (arr) { return chr.apply(String, arr); }
 
             if ( typeof chr.bind == 'function' ) chr = chr.bind(String);
 
@@ -514,7 +527,7 @@ console.log(this === global)
                     if(isNaN(c) || isNaN(k)) return false;
                     ret.push( (c << 4) | k );
                 }
-                return chr.apply(String, ret);
+                return arr2str(ret);
             };
 
             var bin2text = function bin2text(bin) {
@@ -543,7 +556,7 @@ console.log(this === global)
                     }
                 }
                 for(m=0;m<n;m++) ret[m] = a.charCodeAt(m) ^ b.charCodeAt(m);
-                return chr.apply(String, ret);
+                return arr2str(ret);
             };
 
             var packIP4 = function packIP4(ip) {
@@ -563,7 +576,7 @@ console.log(this === global)
                     r.push(t & 0xFF);
                 }
                 if ( hasNaN && r.length == 0 ) return false;
-                r = chr.apply(String, r);
+                r = arr2str(r);
                 return r;
             };
 
@@ -585,7 +598,7 @@ console.log(this === global)
                 if ( $int > INT_SIGN_BIT ) {
                     return  packInt($int & INT3BYTES) +
                             packInt(($int /= INT3BYTES+1) & INT3BYTES) +
-                            packInt(($int / (INT3BYTES+1))|0)
+                            packInt(($int / (INT3BYTES+1))|0) ;
                 }
 
                 var m = $int < 0 ? -1 : 0;
@@ -593,7 +606,7 @@ console.log(this === global)
                     r.push($int & 0xFF);
                     $int >>= 8;
                 }
-                r = chr.apply(String, r);
+                r = arr2str(r);
                 return r;
             };
 
@@ -615,6 +628,7 @@ console.log(this === global)
             P2PEG.packFloat = packFloat;
             P2PEG.packIP4   = packIP4;
             P2PEG.chr       = chr;
+            P2PEG.arr2str   = arr2str;
 
             P2PEG.keys      = keys;
             P2PEG.isEmpty   = isEmpty;

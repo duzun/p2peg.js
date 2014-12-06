@@ -27,8 +27,33 @@
         //  but I suggest not to rely on it for test results
         ,   bin2hex = P2PEG.bin2hex
         ;
-        cons.debug = dump;
+        if ( typeof dump == 'function' ) cons.debug = dump;
 
+        describe('playground', function () {
+            iit('crypto exists', function () {
+                expect(typeof crypto).not.toBe('undefined');
+            })
+            iit('crypto.subtle exists', function () {
+                expect(crypto.subtle).toBeDefined();
+            })
+            iit('crypto.subtle.digest exists', function () {
+                expect(typeof crypto.subtle.digest).not.toBe('undefined');
+            })
+            
+            it('crypto.subtle.digest', function () {
+                function str2Uint8(str) {
+                    return new Uint8Array([].slice.call(str).map(function(c){return c.charCodeAt(0)}));
+                }
+                function Uint2Str(uint) {
+                    return String.fromCharCode.apply(String, uint);
+                }
+                var s = 'hello';
+                var a = str2Uint8(s);
+                var p = crypto.subtle.digest({name:'sha-256'}, a); 
+                p.oncomplete = function(a){console.log(a)}
+            })
+        })
+        
         describe("P2PEG static helpers: ", function () {
             it('should contain version', function () {
                 expect(cons.version).toBeDefined();
@@ -98,7 +123,8 @@
                 ,   bin = cons.packInt(longStrNumber)
                 ;
                 expect(bin).toBeTruthy();
-                expect(bin.length).toBeGreaterThan(longStrNumber.length / cons.INT_LEN * cons.INT_SIZE - 1);
+                expect(bin.length)
+                  .toBeGreaterThan(longStrNumber.length / cons.INT_LEN * cons.INT_SIZE - 1);
             });
             it('should accept float and string for packInt(mixed)', function () {
                 var b123 = cons.packInt(12345|0);
@@ -124,7 +150,7 @@
             });
             it('packIP4(ip) accepts values in IPv4 style with variable number of positions', function () {
                 expect(cons.packIP4('1.0')).toBe("\x01\x00");
-                expect(cons.packIP4('127.0.0.450')).toBe("\x7F\x00\x00\xC2");
+                expect(cons.packIP4('127.0.255.450')).toBe("\x7F\x00\xFF\xC2");
                 expect(cons.packIP4('1.2.3.4.5.6')).toBe("\x01\x02\x03\x04\x05\x06");
                 expect(cons.packIP4(Math.PI)).toBe("\x03\x21");
             });
