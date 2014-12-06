@@ -1,8 +1,15 @@
+/*
+ *  Ussage:
+ *    node bump-ver +<revision> [+<minor> [+<major>]]
+ */
+
+
+var files = ['p2peg.js', 'README.md'];
+var ver_reg = /((?:\$|@)version[\s='"]+)([0-9]+(?:\.[0-9]+)+)/;
+
 
 var path = require('path');
 var fs = require('fs');
-
-var ver_reg = /((?:\$|@)?version[\s='"]+)([0-9]+(?:\.[0-9]+)+)/;
 
 var packFile = path.join(__dirname, 'package.json');
 var pack = fs.readFileSync(packFile);
@@ -26,13 +33,13 @@ if ( over ) {
   ;
   packo.version = nver;
 
-  var buf = JSON.stringify(packo, null, 1);
+  var buf = JSON.stringify(packo, null, 2);
 
   if ( buf && buf != pack ) {
     fs.writeFileSync(packFile, buf);
   }
 
-  ['p2peg.js', 'README.md'].forEach(function (f) {
+  files.forEach(function (f) {
     var fn = path.join(__dirname, f);
     var cnt = fs.readFileSync(fn, 'utf8');
     buf = cnt
