@@ -11,7 +11,10 @@ compiler.jar:
     wget -O- http://dl.google.com/closure-compiler/compiler-latest.tar.gz | tar -xz compiler.jar
 
 min:
-    $(CLOSURE) < p2peg.js > p2peg.min.js
-    
+    $(CLOSURE) < p2peg.js      > ./dist/p2peg.js
+    $(CLOSURE) < lib/sha1.js   > ./dist/lib/sha1.js
+    $(CLOSURE) < lib/sha512.js > ./dist/lib/sha512.js
+    $(CLOSURE) < lib/base64.js > ./dist/lib/base64.js
+
 clean:
     @rm -f p2peg.min.js
