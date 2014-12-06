@@ -1,69 +1,67 @@
 {
- "name": "P2PEG",
- "version": "0.3.1",
- "author": {
-  "name": "Dumitru Uzun",
-  "email": "contact@duzun.me",
-  "url": "http://DUzun.Me/"
- },
- "homepage": "https://github.com/duzun/p2peg.js",
- "description": "Peer to Peer Entropy Generator (or Random numbers generator with p2p seeding)",
- "keywords": [
-  "P2P",
-  "random",
-  "entropy",
-  "cryptography",
-  "javascript",
-  "PHP"
- ],
- "main": "./p2peg.js",
- "files": [
-  "p2peg.js",
-  "lib/",
-  "LICENSE"
- ],
- "directories": {
-  "lib": "./lib",
-  "doc": "./docs"
- },
- "repository": {
-  "type": "git",
-  "url": "https://github.com/duzun/p2peg.js.git"
- },
- "bugs": {
-  "url": "https://github.com/duzun/p2peg.js/issues"
- },
- "license": [
-  {
-   "type": "MIT",
-   "url": "https://github.com/duzun/p2peg.js/raw/master/LICENSE"
+  "name": "P2PEG",
+  "version": "0.3.1",
+  "author": {
+    "name": "Dumitru Uzun",
+    "email": "contact@duzun.me",
+    "url": "http://DUzun.Me/"
+  },
+  "homepage": "https://github.com/duzun/p2peg.js",
+  "description": "Peer to Peer Entropy Generator (or Random numbers generator with p2p seeding)",
+  "keywords": [
+    "P2P",
+    "random",
+    "entropy",
+    "cryptography",
+    "javascript",
+    "PHP"
+  ],
+  "main": "./p2peg.js",
+  "files": [
+    "p2peg.js",
+    "lib/",
+    "LICENSE"
+  ],
+  "directories": {
+    "lib": "./lib",
+    "doc": "./docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/duzun/p2peg.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/duzun/p2peg.js/issues"
+  },
+  "license": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/duzun/p2peg.js/raw/master/LICENSE"
+    }
+  ],
+  "readmeFilename": "README.md",
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "scripts": {
+    "test": "jasmine-node spec",
+    "test-dev": "karma start spec/karma.conf.js",
+    "bump-ver": "node bump-ver.js",
+    "build": "node build.js",
+    "doc": "docco p2peg.js"
+  },
+  "devDependencies": {
+    "docco": "0.6.x",
+    "jasmine-core": "2.1.x",
+    "jasmine-node": "1.14.x",
+    "karma": "0.12.x",
+    "karma-chrome-launcher": "0.1.x",
+    "karma-firefox-launcher": "0.1.x",
+    "karma-ie-launcher": "0.1.x",
+    "karma-jasmine": "0.3.x",
+    "karma-phantomjs-launcher": "0.1.x",
+    "karma-requirejs": "0.2.x",
+    "karma-safari-launcher": "0.1.x",
+    "requirejs": "2.1.x"
   }
- ],
- "readmeFilename": "README.md",
- "engines": {
-  "node": ">= 0.8.0"
- },
- "scripts": {
-  "test": "jasmine-node spec",
-  "test-dev": "karma start spec/karma.conf.js",
-  "min": "java -jar compiler.jar --compilation_level ADVANCED_OPTIMIZATIONS < p2peg.js > p2peg.min.js",
-  "bump-ver": "node bump-ver.js",
-  "build": "node build.js",
-  "compiler": "curl http://dl.google.com/closure-compiler/compiler-latest.tar.gz | tar -xz compiler.jar",
-  "doc": "docco p2peg.js"
- },
- "devDependencies": {
-  "docco": "0.6.x",
-  "jasmine-core": "2.1.x",
-  "jasmine-node": "1.14.x",
-  "karma": "0.12.x",
-  "karma-chrome-launcher": "0.1.x",
-  "karma-firefox-launcher": "0.1.x",
-  "karma-ie-launcher": "0.1.x",
-  "karma-jasmine": "0.3.x",
-  "karma-phantomjs-launcher": "0.1.x",
-  "karma-requirejs": "0.2.x",
-  "karma-safari-launcher": "0.1.x",
-  "requirejs": "2.1.x"
- }
 }
