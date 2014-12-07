@@ -7,11 +7,11 @@
  *  *  clb: http://jsonlib.appspot.com/urandom?callback=p2peg.seed
  *  *  XHR: https://www.random.org/integers/?num=256&min=0&max=255&col=1&base=16&format=plain&rnd=new
  *
- *  @requires sha1, sha512, base64
+ *  @requires sha1, sha256, base64
  *
- *  @version 0.3.1 
+ *  @version 0.3.2
  *
- *  @author DUzun.Me
+ *  @author Dumitru Uzun (DUzun.Me)
  */
 
 ;(function $_P2PEG(name, root, FUNCTION, String, Object, Date, Math) {
@@ -64,8 +64,9 @@
 
     ,   start_ts = now()
 
-    ,   crypto = isNode ? require('crypto') : undefined
+    ,   crypto = isNode ? require('crypto') : root.crypto
     ;
+    // -------------------------------------------------
     // -------------------------------------------------
     (typeof define == FUNCTION && define.amd
         ? define // AMD
@@ -77,18 +78,18 @@
         (typeof require == FUNCTION ? require : function (id){return root[id.split('/').pop()]}))
     )
     /*define*/(
-        ['require', 'module', './lib/sha1', './lib/sha512', './lib/base64']
-        , function factory(require, module, sha1, sha512, base64) {
+        ['require', 'module', './lib/sha1', './lib/sha256', './lib/base64']
+        , function factory(require, module, sha1, sha256, base64) {
             // -------------------------------------------------
             if(!sha1)   sha1   = require('./lib/sha1');
-            if(!sha512) sha512 = require('./lib/sha512');
+            if(!sha256) sha256 = require('./lib/sha256');
             if(!base64) base64 = require('./lib/base64');
 
             var noop = function () {};
 
             // Private primitive hash function
             var _hash = function _hash(str, raw) {
-                var ret = sha512(str);
+                var ret = sha256(str);
                 return raw ? hex2bin(ret) : ret;
             };
 
@@ -148,7 +149,66 @@
                     }
 
                     _self.state = function state() {
+                        if ( _state == undefined ) {
+                          // @TODO
+                          
+                          // Seed the state
+                          var seed = this.hash(this.clientEntropy() + this.dynEntropy() + this.serverEntropy());
+
+                          _state = seed;
+                        }
                         return _state;
+                    }
+
+                    /**
+                     *  Return a random binary string of specified length.
+                     */
+                    _self.str = function str(len) {
+                        var l, ret;
+
+                        // If buffer is empty, fill it
+                        if ( !(l = _l) ) {
+                            this.seed(len);
+                            l = _l;
+                        }
+                        // If we have to return exactly what is in the buffer, return quickly
+                        if ( len == undefined || len == l ) {
+                            // remove used data from buffer to avoid reusing it
+                            ret = l < _b.length ? _b.substr(0, l) : _b;
+                            // empty the buffer
+                            _b = '';
+                            _l = 0;
+                            return ret;
+                        }
+
+                        ret = '';
+                        // If we need more data than we have in the buffer, generate some more
+                        if ( l < len ) {
+                            // remove used data from buffer to avoid reusing it
+                            if ( l < _b.length ) _b = _b.substr(0, l);
+
+                            do {
+                                ret += _b; // save what is in the buffer
+                                this.seed(l);   // fill it again
+                                l += _l;   // the sum of what we have saved in ret and what is in the buffer
+                            } while(l < len);
+                        }
+
+                        // If buffer has more data then we need
+                        if ( len < l ) {
+                            // how much data we don't need from buffer ?
+                            _l = l - len;
+                            // get only that much we need from buffer and leave the rest for others
+                            ret += _b.substr(_l, len);
+                        }
+                        // else buffer has exactly how much data we need - grab it all
+                        else {
+                            ret += _b;
+                            // empty the buffer
+                            _b = '';
+                            _l = 0;
+                        }
+                        return ret;
                     }
 
                     // Strong hash function, HMAC
@@ -192,24 +252,41 @@
 
             proto.setSecret = undefined; // private level access
             proto.seed      = undefined; // private level access
+            proto.str       = undefined; // private level access
             proto.hash      = _hash;     // private level access
 
             // -------------------------------------------------
-            /**
-             *  Return a random binary string of specified length.
-             */
-            proto.str = function str(len) {
-                // ???
-            }
+            proto.toString = function toString(mode) {
+                switch(mode) {
+                  case  16:
+                  case 'hex':
+                      return this.hex();
+
+                  case 256:
+                  case 'bin':
+                      return this.str();
+
+                  default:
+                  case 64:
+                  case 'text':
+                      return this.text();
+                }
+            };
+
+            // -------------------------------------------------
 
             /**
              *  Hex encoded string
              */
             proto.hex = function hex(len) {
-                var l = len != undefined ? len / 2 : undefined
+                var l = len != undefined ? (len+1) >> 1 : len
                 ,   ret = this.str(l)
                 ;
-                return bin2hex(ret);
+                ret = bin2hex(ret);
+                return len == undefined || ret.length == len
+                    ? ret
+                    : ret.substr(0, len)
+                ;
             }
 
             /**
@@ -273,19 +350,11 @@
                 _entr[packInt(micronow())] = 'micronow';
                 _entr[packFloat(Math.random())] = 'rand';
 
-                // Get some data from mt_rand()
-                // $r = array();
-                // $l = rand(1,8);
-                // for ($i = 0; $i < $l; ++$i) $r[] = pack('S', mt_rand(0, 0xFFFF));
-                // $r = implode('', $r);
-                // $_entr[$r] = 'mt_rand';
-
                 // System performance/load indicator
                 var r = hrtime(start_hr);
                 _entr[packFloat(r.join('.'))] = 'delta';
 
                 _entr = keys(_entr).join('');
-                // P2PEG.debug(dynEntropy.name, bin2hex(_entr));
 
                 return _entr;
             };
@@ -358,13 +427,16 @@
 
                     // if ( t = getlastmod() ) _entr[packInt(t)] = 'lastmod';
 
-                    if(crypto && crypto.randomBytes) {
-                        _entr[arr2str(crypto.randomBytes(32))] = ++_el;
-                    }
-
-                    if ( (s = root.crypto) && (s = s.getRandomValues) ) {
-                        root.crypto.getRandomValues(t = new Uint8Array(64));
-                        _entr[arr2str(t)] = ++_el;
+                    if ( crypto ) {
+                        // Node
+                        if( crypto.randomBytes ) {
+                          _entr[arr2str(crypto.randomBytes(32))] = ++_el;
+                        }
+                        // Web API
+                        if ( crypto.getRandomValues ) {
+                          crypto.getRandomValues(t = new Uint8Array(64));
+                          _entr[arr2str(t)] = ++_el;
+                        }
                     }
 
                     _entr = keys(_entr).join('');
@@ -374,6 +446,11 @@
                 }
                 return _entr;
             } ;
+            // -------------------------------------------------
+            proto.clientEntropy = function clientEntropy() {
+                // ??? @TODO
+                return '';
+            };
             // -------------------------------------------------
             /**
              *  Pseudo-random 32bit integer numbers generator.
@@ -438,6 +515,7 @@
             var chr = String.fromCharCode;
             var arr2str = function (arr) { return chr.apply(String, arr); }
 
+            // Be polite, if possible
             if ( typeof chr.bind == 'function' ) chr = chr.bind(String);
 
             var each = function each(o, f) {
