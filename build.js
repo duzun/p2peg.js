@@ -5,7 +5,7 @@ var http = require('http');
 var fs = require('fs');
 var querystring = require('querystring');
 
-var hashes = ['p2peg', 'lib/sha1', 'lib/sha512', 'lib/base64'];
+var hashes = ['p2peg', 'lib/sha1', 'lib/sha265', 'lib/sha512', 'lib/base64', 'lib/crypto_hash'];
 
 var dir = __dirname;
 
