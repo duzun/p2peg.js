@@ -30,6 +30,9 @@
 
     var cons = P2PEG
     ,   inst
+    ,   log = function () {
+          console.log.apply(console, arguments);
+        }
     //  bin2hex() helps visualize binary strings,
     //  but I suggest not to rely on it for test results
     ,   bin2hex = P2PEG.bin2hex
@@ -38,7 +41,7 @@
 
 
     if(!cryptoHash) {
-      dump('Warning: No WEB API crypto support!');
+      console.warn('Warning: No WEB API crypto support!');
     }
     else
     describe('cryptoHash', function () {
@@ -46,7 +49,7 @@
         var msg = 'hello';
         var dgst = sha256(msg);
         cryptoHash('sha-256', msg, function (err, digest) {
-            err && dump(err.description || err.message || err);
+            err && console.error(err);
             expect(digest).toBe(dgst);
             done();
         })
@@ -242,8 +245,8 @@
           var s2  = inst.str();
           var len = s2.length;
 
-          // dump("str() ->", s1.substr(0, 48)+ '...');
-          dump('str().length ==', len);
+          // log("str() ->", s1.substr(0, 48)+ '...');
+          log('str().length ==', len);
 
           it('should return different result at each call', function () {
             expect(s1).not.toEqual(s2);
@@ -290,8 +293,8 @@
           var s2  = inst.text();
           var len = s2.length;
 
-          dump("text() ->", s1.substr(0, 48) + '...');
-          dump('text().length ==', len);
+          log("text() ->", s1.substr(0, 48) + '...');
+          log('text().length ==', len);
 
           it('should return different result at each call', function () {
             expect(s1).not.toEqual(s2);
@@ -338,8 +341,8 @@
           var s2  = inst.hex();
           var len = s2.length;
 
-          dump("hex() ->", s1.substr(0, 48) + '...');
-          dump('hex().length ==', len);
+          log("hex() ->", s1.substr(0, 48) + '...');
+          log('hex().length ==', len);
 
           it('should return different result at each call', function () {
             expect(s1).not.toEqual(s2);
@@ -409,7 +412,7 @@
             expect(seed).toBeTruthy();
           });
         });
-        
+
         describe('.serverEntropy()', function () {
           var entr = inst.serverEntropy();
 
@@ -433,12 +436,12 @@
             expect(entr3).toBeTruthy();
           });
 
-          dump('dynEntropy() -> '+cons.bin2text(entr1));
-          dump('dynEntropy() -> '+cons.bin2text(entr2));
-          dump('dynEntropy() -> '+cons.bin2text(entr3));
+          log('dynEntropy() -> '+cons.bin2text(entr1));
+          log('dynEntropy() -> '+cons.bin2text(entr2));
+          log('dynEntropy() -> '+cons.bin2text(entr3));
         });
 
-        // dump(inst.hash(inst.dynEntropy(), false))
+        // log(inst.hash(inst.dynEntropy(), false))
     });
 
   });
