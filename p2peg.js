@@ -21,7 +21,7 @@
     ,   UNDEFINED = undefined + ''
     ,   hop = Object.prototype.hasOwnProperty
 
-    ,   version   = '0.3.1'
+    ,   version   = '0.3.2'
 
     ,   INT_SIZE  = 4 // JS can handle only 32bit integers == 4 bytes
     ,   INT_LEN   = Math.round(INT_SIZE * Math.log(256) / Math.log(10))

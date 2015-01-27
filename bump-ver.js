@@ -5,7 +5,7 @@
 
 
 var files = ['p2peg.js', 'README.md'];
-var ver_reg = /((?:\$|@)version[\s='"]+)([0-9]+(?:\.[0-9]+)+)/;
+var ver_reg = /((?:\$|@|(,\s+))version[\s='"]+)([0-9]+(?:\.[0-9]+)+)/;
 
 
 var path = require('path');
