@@ -21,8 +21,9 @@ with the peer's secret key.
 Each client-peer adds to the entropy of the server-peer by suppling variable data with the request
 (in purpos or not) and by the fact of connecting to the server (the exact request time is also accounted),
 thus changing internal state of the `P2PEG`.
-The internal state is a sum of all collected entropy bits from system and from all client-peers
+The internal state is a (digested) sum of all collected entropy bits from system and from all peers
 that have ever requested current peer.
+The more requests a peer gets, the more unpredictable internal state it has.
 
 For client-peer there is no way to know about `P2PEG`'s internal state or about other client-peers, 
 hence generated data is truly random and unpredictable.
@@ -53,14 +54,14 @@ var p2peg = P2PEG.instance('optional secret');
 var p2peg = new P2PEG('optional secret');
 ```
 
-Get some random binary string
+Get a random binary string of a given length
 
 ```javascript
 var str = p2peg.str(length);
 ```
 
 Now you can use `str` as cryptographic salt, seed for PRNG, password generators
-or anything else that requires unpredictable hight entropy data.
+or anything else that requires unpredictable high entropy data.
 
 Get some random integer numbers:
 
@@ -70,13 +71,13 @@ var int2 = p2peg.int16();
 var int3 = p2peg.int32();
 ```
 
-Get some random text (base64 encoded)
+Get a random (base64 encoded) text of a given length
 
 ```javascript
 var text = p2peg.text(length);
 ```
 
-Get some random string hex encoded
+Get a random hex encoded string 
 
 ```javascript
 var hex = p2peg.hex(length);
@@ -107,7 +108,7 @@ A secret key chosen at setup
 p2peg.setSecret("some uniq secret that no one knows");
 ```
 
-Seed the P2PEG with some bits of data or your choise
+Seed the P2PEG with some bits of data of your choise
 
 ```javascript
 p2peg.seed("some (random) string");
