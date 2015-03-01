@@ -34,6 +34,9 @@ to gather the random bits and combine the result with it's own PRN and internal 
 On a web-server entropy can also be collected from common website clients.
 
 
+- [Docs](https://duzun.github.io/p2peg.js/docs/p2peg.html)
+- [Specs](https://duzun.github.io/p2peg.js/spec/run/index.html)
+
 ## Basic Usage
 
 Include the libary
