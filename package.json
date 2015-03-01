@@ -45,7 +45,7 @@
   },
   "scripts": {
     "test": "jasmine-node spec",
-    "test-dev": "karma start spec/karma.conf.js",
+    "test-dev": "node ./spec/test-dev.js start ./spec/karma.conf.js",
     "bump-ver": "node bump-ver.js",
     "build": "node build.js",
     "doc": "docco p2peg.js"
