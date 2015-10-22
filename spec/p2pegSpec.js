@@ -179,10 +179,18 @@
 
     describe('packFloat(float)', function () {
         it('packFloat(int) should return the same result as packInt(int) only for int.', function () {
-            var r = Math.random() * (-1>>>0);
-            var bInt = cons.packInt(r);
-            expect(bin2hex(cons.packFloat(r|0))).toBe(bin2hex(bInt));
-            expect(cons.packFloat(r)).not.toBe(bInt);
+            var numbers = [
+                4293048097.654321 // >4 bytes matiss
+              ,-4293048097.654321 // >4 bytes matiss
+              , 4293409.654321
+              ,-4293409.654321
+              , Math.random() * (-1>>>0)
+            ];
+            numbers.forEach(function (r) {
+                var bInt = cons.packInt(r);
+                expect(bin2hex(cons.packFloat(parseInt(r)))).toBe(bin2hex(bInt), r);
+                expect(cons.packFloat(r)).not.toBe(bInt, r);
+            });
         });
     });
 

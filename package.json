@@ -1,6 +1,6 @@
 {
   "name": "p2peg",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "author": {
     "name": "Dumitru Uzun",
     "email": "contact@duzun.me",
@@ -19,8 +19,7 @@
   "main": "./p2peg.js",
   "files": [
     "p2peg.js",
-    "lib/",
-    "LICENSE"
+    "lib/"
   ],
   "directories": {
     "lib": "./lib",
@@ -40,17 +39,21 @@
     }
   ],
   "readmeFilename": "README.md",
-  "engines": {
-    "node": ">= 0.8.0"
+  "verup": {
+    "files": [
+      "p2peg.js",
+      "README.md"
+    ]
   },
   "scripts": {
     "test": "jasmine-node spec",
     "test-dev": "karma start ./spec/karma.conf.js",
-    "bump-ver": "node bump-ver.js",
+    "verup": "verup",
     "build": "node build.js",
     "doc": "docco p2peg.js"
   },
   "devDependencies": {
+    "verup": "1.x.x",
     "docco": "0.6.x",
     "jasmine-core": "2.2.x",
     "jasmine-node": "1.14.x",

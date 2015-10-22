@@ -1,16 +1,15 @@
 /**
- *  This file is under develoment.
+ *  Peer to Peer Entropy Generator - or Random numbers generator with p2p seeding
  *
  *  @TODO:
- *  *  all ???
  *  *  API: https://developer.mozilla.org/en-US/docs/Web/API/RandomSource.getRandomValues
  *  *  clb: http://jsonlib.appspot.com/urandom?callback=p2peg.seed
  *  *  XHR: https://www.random.org/integers/?num=256&min=0&max=255&col=1&base=16&format=plain&rnd=new
  *
  *  @requires sha1, sha256, base64
  *
- *  @version 0.3.2
- *
+ *  @license MIT
+ *  @version 0.3.3
  *  @author Dumitru Uzun (DUzun.Me)
  */
 
@@ -21,7 +20,7 @@
     ,   UNDEFINED = undefined + ''
     ,   hop = Object.prototype.hasOwnProperty
 
-    ,   version   = '0.3.2'
+    ,   version   = '0.3.3'
 
     ,   INT_SIZE  = 4 // JS can handle only 32bit integers == 4 bytes
     ,   INT_LEN   = Math.round(INT_SIZE * Math.log(256) / Math.log(10))
@@ -151,7 +150,7 @@
                     _self.state = function state() {
                         if ( _state == undefined ) {
                           // @TODO
-                          
+
                           // Seed the state
                           var seed = this.hash(this.clientEntropy() + this.dynEntropy() + this.serverEntropy());
 
@@ -675,7 +674,7 @@
                 }
                 // When $int is bigger then int32, shift cuts out some bits.
                 // Split the number into 3 pieces of 24 bits (Number is a 53 bit precision double)
-                if ( $int > INT_SIGN_BIT ) {
+                if ( $int > INT_SIGN_BIT || -$int > INT_SIGN_BIT ) {
                     return  packInt($int & INT3BYTES) +
                             packInt(($int /= INT3BYTES+1) & INT3BYTES) +
                             packInt(($int / (INT3BYTES+1))|0) ;
