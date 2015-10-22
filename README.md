@@ -8,8 +8,7 @@
 
 ## About
 
-**Node**: This is a port to JS of [P2PEG](//github.com/duzun/P2PEG) for PHP.
-It is still under development.
+**Node**: This is a port to JS of [P2PEG.php](//github.com/duzun/P2PEG).
 
 This library uses a combination of sources of entropy to generate random data as unpredictable as posible.
 The key concept is sharing of random data between peers, where both peers benefit from the request.
