@@ -45,16 +45,16 @@
   },
   "scripts": {
     "test": "jasmine-node spec",
-    "test-dev": "node ./spec/test-dev.js start ./spec/karma.conf.js",
+    "test-dev": "karma start ./spec/karma.conf.js",
     "bump-ver": "node bump-ver.js",
     "build": "node build.js",
     "doc": "docco p2peg.js"
   },
   "devDependencies": {
     "docco": "0.6.x",
-    "jasmine-core": "2.1.x",
+    "jasmine-core": "2.2.x",
     "jasmine-node": "1.14.x",
-    "karma": "0.12.x",
+    "karma": "0.x",
     "karma-chrome-launcher": "0.1.x",
     "karma-firefox-launcher": "0.1.x",
     "karma-ie-launcher": "0.1.x",

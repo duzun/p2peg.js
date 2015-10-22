@@ -1,5 +1,5 @@
 /*
- *  Ussage:
+ *  Usage:
  *    node bump-ver +<revision> [+<minor> [+<major>]]
  */
 
