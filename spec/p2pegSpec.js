@@ -264,7 +264,8 @@
             expect(s2).toBeTruthy();
           });
           it('should have non-ASCII chars', function () {
-            expect(/[^\x08-\x80]/.test(s2)).toBeTruthy();
+            var reg = /[^\x08-\x80]/;
+            expect(reg.test(s2) || reg.test(s1)).toBeTruthy();
           });
 
           var s1l = len - 10;  // less then len, from begining
