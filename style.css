@@ -1,0 +1,25 @@
+*, *:before, *:after {
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+
+html, body {
+    position: relative;
+    min-height:100%;
+    margin: 0;
+    background: transparent;
+    background-color: #fff;
+}
+html {
+    height:100%;
+}
+body {
+    padding: 10px;
+    position:relative;
+}
+
+header, section, footer {
+    margin: 0px auto;
+}
+
