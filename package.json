@@ -54,17 +54,17 @@
   },
   "devDependencies": {
     "verup": "1.x.x",
-    "docco": "0.6.x",
-    "jasmine-core": "2.2.x",
+    "docco": "0.x",
+    "jasmine-core": "2.3.x",
     "jasmine-node": "1.14.x",
     "karma": "0.x",
-    "karma-chrome-launcher": "0.1.x",
-    "karma-firefox-launcher": "0.1.x",
-    "karma-ie-launcher": "0.1.x",
+    "karma-phantomjs-launcher": "0.x",
+    "karma-chrome-launcher": "0.x",
+    "karma-firefox-launcher": "0.x",
+    "karma-safari-launcher": "0.x",
+    "karma-ie-launcher": "0.x",
     "karma-jasmine": "0.3.x",
-    "karma-phantomjs-launcher": "0.1.x",
     "karma-requirejs": "0.2.x",
-    "karma-safari-launcher": "0.1.x",
     "requirejs": "2.1.x"
   }
 }
