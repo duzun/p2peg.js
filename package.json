@@ -53,18 +53,18 @@
     "doc": "docco p2peg.js"
   },
   "devDependencies": {
-    "verup": "1.x.x",
+    "verup": "1.x",
     "docco": "0.x",
-    "jasmine-core": "2.3.x",
-    "jasmine-node": "1.14.x",
+    "jasmine-core": "2.4",
+    "jasmine-node": "1.14",
     "karma": "0.x",
     "karma-phantomjs-launcher": "0.x",
     "karma-chrome-launcher": "0.x",
     "karma-firefox-launcher": "0.x",
     "karma-safari-launcher": "0.x",
     "karma-ie-launcher": "0.x",
-    "karma-jasmine": "0.3.x",
-    "karma-requirejs": "0.2.x",
-    "requirejs": "2.1.x"
+    "karma-jasmine": "0.3",
+    "karma-requirejs": "0.2",
+    "requirejs": "2.1"
   }
 }
