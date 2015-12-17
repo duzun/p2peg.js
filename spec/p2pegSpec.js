@@ -217,9 +217,6 @@
             inst && inst.seed('beforeEach');
         });
 
-        afterEach(function() {
-        });
-
         describe('.hash()', function () {
           var nhex_reg = /[^0-9a-fA-F]/;
 
@@ -451,6 +448,26 @@
         });
 
         // log(inst.hash(inst.dynEntropy(), false))
+    });
+
+    describe('random()', function () {
+        if(!inst) inst = cons.instance();
+        var r = []
+        ,   v = {}
+        ,   l = 10000
+        ;
+        beforeAll(function () {
+            for(var i = 0; i < l; i++) v[r[i] = inst.random()] = i;
+        });
+
+        it('should return a number from interval [0..1)', function () {
+            var e;
+            expect(r.every(function (n) { e = n; return 0 <= n && n < 1; })).toBeTruthy(e);
+        });
+
+        it('should not return same value with a probability of 99.9%', function () {
+            expect(Object.keys(v).length > ( l * .999 )).toBeTruthy();
+        });
     });
 
   });

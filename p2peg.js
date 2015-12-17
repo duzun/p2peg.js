@@ -9,7 +9,7 @@
  *  @requires sha1, sha256, base64
  *
  *  @license MIT
- *  @version 0.3.3
+ *  @version 0.3.4
  *  @author Dumitru Uzun (DUzun.Me)
  */
 
@@ -20,7 +20,7 @@
     ,   UNDEFINED = undefined + ''
     ,   hop = Object.prototype.hasOwnProperty
 
-    ,   version   = '0.3.3'
+    ,   version   = '0.3.4'
 
     ,   INT_SIZE  = 4 // JS can handle only 32bit integers == 4 bytes
     ,   INT_LEN   = Math.round(INT_SIZE * Math.log(256) / Math.log(10))
@@ -220,7 +220,7 @@
                     // -------------------------------------------------
                     // __construct()
                     if ( secret == undefined ) {
-                        secret = '!8L_JlACt:5!R9}~>yb!gPP=|(ao/&-Z';
+                        secret = '!8L_JlACt:5!R9}~>yb!gPP=|(ao/&-Z' + version;
                     }
 
                     _self.setSecret(secret);
@@ -242,6 +242,9 @@
             P2PEG.instance = function instance(secret) {
                 if(!_instance) {
                     _instance = new P2PEG(secret);
+                }
+                else if ( secret ) {
+                    _instance.setSecret(secret);
                 }
                 return _instance;
             }
@@ -458,6 +461,8 @@
              *  but is much faster at generating long strings of random numbers.
              *
              *  @source http://en.wikipedia.org/wiki/Random_number_generation
+             *
+             *  @return int32 [-0x80000000..0x7FFFFFFF]
              */
             proto.rand32 = function rand32() {
                 var _self = this
@@ -479,14 +484,23 @@
 
                 rs_z = 36969 * (rs_z & 0xFFFF) + (rs_z >> 16);
                 rs_w = 18000 * (rs_w & 0xFFFF) + (rs_w >> 16);
-                var ret = (rs_z << 16) + rs_w;  /* 32-bit result */
 
                 _self.rs_w = rs_w;
                 _self.rs_z = rs_z;
 
                 // handle overflow:
-                // in JS at overflow (int32) -> (float)
-                return ret | 0;
+                // in JS at overflow (int32) -> (float), so use "|" rather then "+"
+                var ret = (rs_z << 16) | rs_w;  /* 32-bit result */
+                return ret;
+            }
+
+            /**
+             *  A substitution for Math.random().
+             *
+             *  @return double from interval [0..1)
+             */
+            proto.random = function random() {
+                return (1 + this.rand32() / (MAX_INT+1)) / 2;
             }
 
             proto.saveState = function saveState(sf) {

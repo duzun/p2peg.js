@@ -1,7 +1,7 @@
 
 # Peer to Peer Entropy Generator
 ## or Random numbers generator with p2p seeding
-@version 0.3.3 
+@version 0.3.4 
 [![Build Status](https://travis-ci.org/duzun/p2peg.js.svg?branch=master)](//travis-ci.org/duzun/p2peg.js)
 [![Dependencies](https://david-dm.org/duzun/p2peg.js.svg)](//david-dm.org/duzun/p2peg.js)
 [![devDependencies](https://david-dm.org/duzun/p2peg.js/dev-status.svg)](//david-dm.org/duzun/p2peg.js#info=devDependencies&view=table)
@@ -44,7 +44,7 @@ On a web-server entropy can also be collected from common website clients.
 
 Include the libary
 
-```javascript
+```js
 var P2PEG = require("./p2peg");
 ```
 or
@@ -54,7 +54,7 @@ or
 
 Get the singleton instance or just create a new instance of P2PEG
 
-```javascript
+```js
 var p2peg = P2PEG.instance('optional secret');
 // or
 var p2peg = new P2PEG('optional secret');
@@ -62,7 +62,7 @@ var p2peg = new P2PEG('optional secret');
 
 Get a random binary string of a given length
 
-```javascript
+```js
 var str = p2peg.str(length);
 ```
 
@@ -71,7 +71,7 @@ or anything else that requires unpredictable high entropy data.
 
 Get some random integer numbers:
 
-```javascript
+```js
 var int1 = p2peg.int();
 var int2 = p2peg.int16();
 var int3 = p2peg.int32();
@@ -79,22 +79,29 @@ var int3 = p2peg.int32();
 
 Get a random (base64 encoded) text of a given length
 
-```javascript
+```js
 var text = p2peg.text(length);
 ```
 
 Get a random hex encoded string 
 
-```javascript
+```js
 var hex = p2peg.hex(length);
 ```
 
 Get a pseudo random 32bit integer - this method is faster then int32()
 for generating lots of numbers, but in turn it uses less entropy.
 
-```javascript
+```js
 var rand_int = p2peg.rand32();
 ```
+
+Get a random number similar to `Math.random()`
+
+```js
+var rand = p2peg.random(); // relies on p2peg.rand32()
+```
+
 
 ## Advanced Usage
 
@@ -103,26 +110,26 @@ Before using the instance of `P2PEG` class, it is a good idea to set some proper
 Internal state file - optional.
 Tip: Keep it inaccessible to other users on system by `chmod 0600 p2peg.dat`
 
-```javascript
+```js
 // @TODO
 p2peg.setStateFile("/path/to/data/p2peg.dat");
 ```
 
 A secret key chosen at setup
 
-```javascript
+```js
 p2peg.setSecret("some uniq secret that no one knows");
 ```
 
 Seed the P2PEG with some bits of data of your choise
 
-```javascript
+```js
 p2peg.seed("some (random) string");
 ```
 
 Create a (seeded) RNG
 
-```javascript
+```js
 // @TODO
 var myRNG = p2peg.rng('optional seed');
 var num1 = myRNG(); // a random Number from [0..1) interval
@@ -132,20 +139,20 @@ var num2 = myRNG(1,50); // a random integer from [1..50) interval
 
 Write to `/dev/random` (node.js)
 
-```javascript
+```js
 // @TODO
 p2peg.seedRandomDev("some (optional) entropy");
 ```
 
 Get a 48bit integer (JS Number can handle integers up to 53bit long)
 
-```javascript
+```js
 var int48 = p2peg.int(6);
 ```
 
 Display a random bitmap image
 
-```javascript
+```js
 // @TODO
 p2peg.genImgBase64(width, height, method='rand32', itemSize=0);
 ```
@@ -154,7 +161,7 @@ Take care of what `method` you allow for `servImg()`,
 cause it could display some private data to client.
 The following methods are safe to display to client:
 
-```javascript
+```js
 var allowMethods = array('rand32', 'int','int32','int16','str','seed','text','hex','dynEntropy','clientEntropy','networkEntropy');
 ```
 
@@ -169,14 +176,14 @@ Examples (PHP):
 
 Get some entropy from outside
 
-```javascript
+```js
 // @TODO
 p2peg.networkEntropy([autoseed=true]);
 ```
 
 On cron event you could call
 
-```javascript
+```js
 // @TODO
 p2peg.expensiveEntropy([autoseed=true]);
 ```
