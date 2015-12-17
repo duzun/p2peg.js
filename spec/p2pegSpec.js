@@ -456,9 +456,9 @@
         ,   v = {}
         ,   l = 10000
         ;
-        beforeAll(function () {
+        // beforeAll(function () {
             for(var i = 0; i < l; i++) v[r[i] = inst.random()] = i;
-        });
+        // });
 
         it('should return a number from interval [0..1)', function () {
             var e;

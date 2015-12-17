@@ -46,7 +46,7 @@
     ]
   },
   "scripts": {
-    "test": "jasmine-node spec",
+    "test": "jasmine-node spec && karma start  ./spec/karma.conf.js --single-run",
     "test-dev": "karma start ./spec/karma.conf.js",
     "verup": "verup",
     "build": "node build.js",
