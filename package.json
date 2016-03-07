@@ -53,7 +53,7 @@
     "doc": "docco p2peg.js"
   },
   "devDependencies": {
-    "verup": "1.x",
+    "verup": "1.4.0",
     "docco": "0.x",
     "jasmine-core": "2.4",
     "jasmine-node": "1.14",
