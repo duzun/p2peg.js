@@ -2,11 +2,7 @@ language: node_js
 node_js:
 - "stable"
 - "4.1"
-- "4.0"
 - '0.12'
-- '0.11'
-- '0.10'
-- 'iojs'
 
 sudo: true
 
@@ -23,8 +19,8 @@ before_install:
   - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
   - sudo dpkg -i google-chrome*.deb
 
-script: npm test        
-        
+script: npm test
+
 deploy:
   provider: npm
   email: contact@duzun.me
