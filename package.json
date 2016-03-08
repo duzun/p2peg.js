@@ -46,7 +46,9 @@
     ]
   },
   "scripts": {
-    "test": "jasmine-node spec && karma start  ./spec/karma.conf.js --single-run",
+    "test": "npm run test-node && npm run test-browser",
+    "test-browser": "karma start ./spec/karma.conf.js --single-run",
+    "test-node": "jasmine-node spec",
     "test-dev": "karma start ./spec/karma.conf.js",
     "verup": "verup",
     "build": "node build.js",
@@ -57,7 +59,7 @@
     "docco": "0.x",
     "jasmine-core": "2.4",
     "jasmine-node": "1.14",
-    "karma": "0.13.20",
+    "karma": "0.13",
     "karma-phantomjs-launcher": "1.0.0",
     "karma-chrome-launcher": "0.x",
     "karma-firefox-launcher": "0.x",
