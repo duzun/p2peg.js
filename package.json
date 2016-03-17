@@ -67,6 +67,6 @@
     "karma-ie-launcher": "0.x",
     "karma-jasmine": "0.3",
     "karma-requirejs": "0.2",
-    "requirejs": "2.1"
+    "requirejs": "2.x"
   }
 }
