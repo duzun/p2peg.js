@@ -65,7 +65,7 @@
     "karma-firefox-launcher": "0.x",
     "karma-safari-launcher": "0.x",
     "karma-ie-launcher": "0.x",
-    "karma-jasmine": "0.3",
+    "karma-jasmine": "1.0.0",
     "karma-requirejs": "0.2",
     "requirejs": "2.x"
   }
