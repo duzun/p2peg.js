@@ -60,7 +60,7 @@
     "jasmine-core": "2.4",
     "jasmine-node": "1.14",
     "karma": "0.13",
-    "karma-phantomjs-launcher": "1.0.0",
+    "karma-phantomjs-launcher": "1.0.1",
     "karma-chrome-launcher": "1.0.1",
     "karma-firefox-launcher": "0.x",
     "karma-safari-launcher": "0.x",
