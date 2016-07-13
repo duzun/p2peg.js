@@ -212,7 +212,7 @@ Each pear gets entropy and gives entropy at the same time with a simple GET requ
 
 3. Count the amount of entropy generated
 
-4. Test the quality of entropy
+4. Test the quality of entropy with [TestU01](http://simul.iro.umontreal.ca/testu01/tu01.html)
 
 
 
