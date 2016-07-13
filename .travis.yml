@@ -21,17 +21,18 @@ addons:
       - google-chrome
     packages:
       - google-chrome-stable
-      
+
 before_install:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
   - sleep 3
-  
+
 script: npm run $COMMAND
 env:
   matrix:
   - COMMAND=test-node
   - COMMAND=test-browser
+
 deploy:
   provider: npm
   email: contact@duzun.me
