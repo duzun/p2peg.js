@@ -13,7 +13,7 @@ var allTestFiles = [];
             allTestFiles.push(pathToModule(file));
         }
     }
-}(window.__karma__.files, Object.prototype.hasOwnProperty))
+}(window.__karma__.files, Object.prototype.hasOwnProperty));
 
 require.config({
   // Karma serves files under /base, which is the basePath from your config file

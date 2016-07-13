@@ -9,18 +9,20 @@
  *  @requires sha1, sha256, base64
  *
  *  @license MIT
- *  @version 0.3.4
+ *  @version 0.3.5
  *  @author Dumitru Uzun (DUzun.Me)
  */
+
+/*globals module, exports, require, define, process, global*/
 
 ;(function $_P2PEG(name, root, FUNCTION, String, Object, Date, Math) {
     'use strict';
     // -------------------------------------------------
-    var undefined
+    var undefined //jshint ignore:line
     ,   UNDEFINED = undefined + ''
     ,   hop = Object.prototype.hasOwnProperty
 
-    ,   version   = '0.3.4'
+    ,   version   = '0.3.5'
 
     ,   INT_SIZE  = 4 // JS can handle only 32bit integers == 4 bytes
     ,   INT_LEN   = Math.round(INT_SIZE * Math.log(256) / Math.log(10))
@@ -36,14 +38,14 @@
     ,   proc = typeof process !== 'undefined' && process.hrtime ? process : null
     ,   now      = ! perf
                     ? typeof Date.now !== FUNCTION
-                        ? function () { return (new Date).getTime() }
-                        : function () { return Date.now() }
-                    : function () { return perf.now() }
+                        ? function () { return (new Date()).getTime(); }
+                        : function () { return Date.now(); }
+                    : function () { return perf.now(); }
     ,   micronow = ! proc
                     ? ! perf
                         ? function () { return now() % 1e3; }
                         : function () { return ((perf.now() * 1e3)|0) % 1e6; }
-                    : function () { return process.hrtime()[1] }
+                    : function () { return process.hrtime()[1]; }
 
     ,   hrtime = proc
                     ? function (x) { return x ? process.hrtime(x) : process.hrtime(); }
@@ -61,7 +63,7 @@
 
     ,   start_hr = hrtime()
 
-    ,   start_ts = now()
+    // ,   start_ts = now()
 
     ,   crypto = isNode ? require('crypto') : root.crypto
     ;
@@ -73,8 +75,9 @@
             return typeof module != UNDEFINED && module.exports
                 ? function (deps, factory) { module.exports = factory(require, module); }              // CommonJs
                 : function (deps, factory) { root[name] = factory(require/*, module == undefined*/); } // Browser
+            ;
         }
-        (typeof require == FUNCTION ? require : function (id){return root[id.split('/').pop()]}))
+        (typeof require == FUNCTION ? require : function (id){return root[id.split('/').pop()];}))
     )
     /*define*/(
         ['require', 'module', './lib/sha1', './lib/sha256', './lib/base64']
@@ -117,15 +120,15 @@
                         var l = String(key).length;
                         if(size < l) {
                             key = sha1(key);
-                            if(key === FALSE) return key;
+                            if(key === false) return key;
                             key = hex2bin(key);
-                            l = strlen($key);
+                            l = key.length;
                         }
                         if(l < size) {
                             key = str_pad(key, size, chr(0), false);
                         }
                         else {
-                            key = key + substr(0, -1) + chr(0);
+                            key = key.slice(0, -1) + chr(0);
                         }
 
                         _opad = strxor(str_repeat(chr(0x5C), size), key);
@@ -133,7 +136,7 @@
 
                         // Empty the buffer
                         _l = 0;
-                    }
+                    };
 
                     _self.seed = function seed(_seed) {
                         var ret = _self.state()
@@ -145,7 +148,7 @@
                         _b = ret;
                         _l = ret.length;
                         return ret;
-                    }
+                    };
 
                     _self.state = function state() {
                         if ( _state == undefined ) {
@@ -157,7 +160,7 @@
                           _state = seed;
                         }
                         return _state;
-                    }
+                    };
 
                     /**
                      *  Return a random binary string of specified length.
@@ -208,7 +211,7 @@
                             _l = 0;
                         }
                         return ret;
-                    }
+                    };
 
                     // Strong hash function, HMAC
                     _self.hash = function hash(str, raw) {
@@ -216,7 +219,8 @@
                         str = _ipad + str;
                         var ret = _hash(_opad + _hash(_ipad + str, true), raw);
                         return ret;
-                    }
+                    };
+
                     // -------------------------------------------------
                     // __construct()
                     if ( secret == undefined ) {
@@ -247,7 +251,7 @@
                     _instance.setSecret(secret);
                 }
                 return _instance;
-            }
+            };
 
             // -------------------------------------------------
             proto.constructor = P2PEG;
@@ -289,7 +293,7 @@
                     ? ret
                     : ret.substr(0, len)
                 ;
-            }
+            };
 
             /**
              *  Base64 encoded text for URL
@@ -300,7 +304,7 @@
                 ;
                 if(len != undefined && ret.length > len) ret = ret.substr(0, len);
                 return ret;
-            }
+            };
 
             /**
              *  Return a random 16 bit integer.
@@ -309,7 +313,7 @@
              */
             proto.int16 = function int16() {
                 return this.int(2);
-            }
+            };
 
             /**
              *  Return a random 32 bit integer.
@@ -318,7 +322,7 @@
              */
             proto.int32 = function int32() {
                 return this.int(4);
-            }
+            };
 
             /**
              *  Return a random integer.
@@ -338,7 +342,7 @@
                 ;
                 for(;s--;) r = (r << 8) | src.charCodeAt(s);
                 return r;
-            }
+            };
 
             // -------------------------------------------------
             /**
@@ -371,7 +375,7 @@
 
                 if ( _entr == undefined ) {
                     var _el = 0, t, s;
-                    _entr = {}
+                    _entr = {};
 
                     _entr[packFloat(start_hr.join('.'))] = 'start';
                     _entr[packIP4(version)] = 'ver';
@@ -394,7 +398,7 @@
                     }
 
                     if ( s = root.screen ) {
-                        each(s, function (i,p) { _entr[p||i] = _el });
+                        each(s, function (i,p) { _entr[p||i] = _el; });
                     }
 
                     if ( s = root.document ) {
@@ -409,7 +413,7 @@
                     if ( _el ) {
                         _entr[packFloat(hrtime(start_hr).join('.'))] = 1; // some randomness
                         _el = _self.hash(keys(_entr).join(''), true); // HMAC with secret
-                        _entr = {}
+                        _entr = {};
                         _entr[_el] = 'client';
                         _el = 1;
                     }
@@ -492,7 +496,7 @@
                 // in JS at overflow (int32) -> (float), so use "|" rather then "+"
                 var ret = (rs_z << 16) | rs_w;  /* 32-bit result */
                 return ret;
-            }
+            };
 
             /**
              *  A substitution for Math.random().
@@ -501,16 +505,16 @@
              */
             proto.random = function random() {
                 return (1 + this.rand32() / (MAX_INT+1)) / 2;
-            }
+            };
 
             proto.saveState = function saveState(sf) {
                 // @TODO: save to fs or localStorage
-            }
+            };
 
             proto.isServer = function isServer() {
                 // @TODO: There might be other server environments besides node.js
                 return isNode;
-            }
+            };
 
             proto.seedSys = true;
             proto.rs_z = 0;
@@ -526,7 +530,7 @@
             var ceil  = Math.ceil;
 
             var chr = String.fromCharCode;
-            var arr2str = function (arr) { return chr.apply(String, arr); }
+            var arr2str = function (arr) { return chr.apply(String, arr); };
 
             // Be polite, if possible
             if ( typeof chr.bind == 'function' ) chr = chr.bind(String);
@@ -547,20 +551,20 @@
                     }
                     // Warning: IE hasDontEnumBug - not implemented!
                 }
-                return o
+                return o;
             } ;
 
             var isEmpty = function isEmpty(obj) {
                 var ret = true;
-                each(obj, function () { return ret = false });
-                return ret
+                each(obj, function () { return ret = false; });
+                return ret;
             } ;
 
             var keys = Object.keys;
             if ( typeof keys !== FUNCTION ) {
                 keys = function keys(o) {
                     var ret = [];
-                    each(o, function (k,v) { ret.push(k); });
+                    each(o, function (k) { ret.push(k); });
                     return ret;
                 };
             }
@@ -579,12 +583,12 @@
                     if(left) {
                         while(i--) t = s + t;
                         i = t.length;
-                        t = n < i ? t.substr(i-n) : _(t)
+                        t = n < i ? t.substr(i-n) : String(t);
                     }
                     else {
                         while(i--) t += s;
                         i = t.length;
-                        t = n < i ? t.substr(0, n) : _(t)
+                        t = n < i ? t.substr(0, n) : String(t);
                     }
                 }
                 return t;
@@ -605,7 +609,7 @@
                     ret += c.toString(16);
                 }
                 return ret;
-            }
+            };
 
             /// Converts a string of HEX digits (0-f) to its binary string representation
             var hex2bin = function hex2bin(s) {
