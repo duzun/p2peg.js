@@ -77,7 +77,7 @@
     "jasmine-node": "1.14",
     "karma": "1.1",
     "karma-phantomjs-launcher": "1.x",
-    "karma-chrome-launcher": "1.x",
+    "karma-chrome-launcher": "2.0.0",
     "karma-firefox-launcher": "1.x",
     "karma-safari-launcher": "1.x",
     "karma-ie-launcher": "1.x",
