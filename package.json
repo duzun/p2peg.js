@@ -75,7 +75,7 @@
     "docco": "0.x",
     "jasmine-core": "2.4",
     "jasmine-node": "1.14",
-    "karma": "1.1",
+    "karma": "1.4.1",
     "karma-phantomjs-launcher": "1.x",
     "karma-chrome-launcher": "1.x",
     "karma-firefox-launcher": "1.x",
