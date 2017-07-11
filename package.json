@@ -8,6 +8,7 @@
   },
   "homepage": "https://github.com/duzun/p2peg.js",
   "description": "Peer to Peer Entropy Generator (or Random numbers generator with p2p seeding)",
+  "reveal": true,
   "keywords": [
     "P2P",
     "random",
