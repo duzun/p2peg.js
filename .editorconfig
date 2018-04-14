@@ -9,5 +9,16 @@ charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 
-[*.md]
+[*.{md,markdown}]
 trim_trailing_whitespace = false
+
+[*.json]
+indent_style = space
+indent_size = 2
+
+[{Makefile,makefile,*.mk}]
+indent_style = tab
+
+[*.yml]
+indent_style = space
+indent_size = 4

@@ -9,7 +9,7 @@
  *  @requires sha1, sha256, base64
  *
  *  @license MIT
- *  @version 0.3.5
+ *  @version 0.3.6
  *  @author Dumitru Uzun (DUzun.Me)
  */
 
@@ -22,7 +22,7 @@
     ,   UNDEFINED = undefined + ''
     ,   hop = Object.prototype.hasOwnProperty
 
-    ,   version   = '0.3.5'
+    ,   version   = '0.3.6'
 
     ,   INT_SIZE  = 4 // JS can handle only 32bit integers == 4 bytes
     ,   INT_LEN   = Math.round(INT_SIZE * Math.log(256) / Math.log(10))
@@ -507,7 +507,7 @@
                 return (1 + this.rand32() / (MAX_INT+1)) / 2;
             };
 
-            proto.saveState = function saveState(sf) {
+            proto.saveState = function saveState(/*sf*/) {
                 // @TODO: save to fs or localStorage
             };
 

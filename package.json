@@ -1,6 +1,6 @@
 {
   "name": "p2peg",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "author": {
     "name": "Dumitru Uzun",
     "email": "contact@duzun.me",
@@ -18,7 +18,9 @@
     "PHP"
   ],
   "main": "./p2peg.js",
+  "unpkg": "dist/p2peg.js",
   "files": [
+    "dist/",
     "p2peg.js",
     "lib/"
   ],
@@ -42,6 +44,7 @@
   "readmeFilename": "README.md",
   "verup": {
     "files": [
+      "package-lock.json",
       "p2peg.js",
       "README.md"
     ]
@@ -72,18 +75,19 @@
     "-W018": false
   },
   "devDependencies": {
-    "verup": "1.x",
-    "docco": "0.x",
-    "jasmine-core": "2.6",
+    "docco": "^0.8.0",
+    "gccs": "^1.2.0",
+    "jasmine-core": "^2.6.4",
     "jasmine-node": "1.14",
-    "karma": "1.7",
-    "karma-phantomjs-launcher": "1.x",
-    "karma-chrome-launcher": "2.x",
-    "karma-firefox-launcher": "1.x",
-    "karma-safari-launcher": "1.x",
+    "karma": "^1.7.1",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-firefox-launcher": "^1.1.0",
     "karma-ie-launcher": "1.x",
-    "karma-jasmine": "1.x",
+    "karma-jasmine": "^1.1.1",
+    "karma-phantomjs-launcher": "1.x",
     "karma-requirejs": "1.x",
-    "requirejs": "2.x"
+    "karma-safari-launcher": "1.x",
+    "requirejs": "^2.3.5",
+    "verup": "^1.6.0"
   }
 }

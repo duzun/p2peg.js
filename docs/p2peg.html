@@ -41,12 +41,14 @@
  *  @requires sha1, sha256, base64
  *
  *  @license MIT
- *  @version 0.3.3
+ *  @version 0.3.5
  *  @author Dumitru Uzun (DUzun.Me)
  */</span>
 
-;(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">$_P2PEG</span>(<span class="hljs-params">name, root, FUNCTION, String, Object, Date, Math</span>) </span>{<span class="hljs-pi">
-    'use strict'</span>;</pre></div></div>
+<span class="hljs-comment">/*globals module, exports, require, define, process, global*/</span>
+
+;(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">$_P2PEG</span>(<span class="hljs-params">name, root, FUNCTION, String, Object, Date, Math</span>) </span>{
+<span class="hljs-meta">    'use strict'</span>;</pre></div></div>
             
         </li>
         
@@ -61,15 +63,27 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> <span class="hljs-literal">undefined</span>
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> <span class="hljs-literal">undefined</span> <span class="hljs-comment">//jshint ignore:line</span>
     ,   UNDEFINED = <span class="hljs-literal">undefined</span> + <span class="hljs-string">''</span>
     ,   hop = <span class="hljs-built_in">Object</span>.prototype.hasOwnProperty
 
-    ,   version   = <span class="hljs-string">'0.3.3'</span>
+    ,   version   = <span class="hljs-string">'0.3.5'</span>
 
     ,   INT_SIZE  = <span class="hljs-number">4</span> <span class="hljs-comment">// JS can handle only 32bit integers == 4 bytes</span>
     ,   INT_LEN   = <span class="hljs-built_in">Math</span>.round(INT_SIZE * <span class="hljs-built_in">Math</span>.log(<span class="hljs-number">256</span>) / <span class="hljs-built_in">Math</span>.log(<span class="hljs-number">10</span>))
-    ,   MAX_INT   = -<span class="hljs-number">1</span> &gt;&gt;&gt; <span class="hljs-number">1</span>
+    ,   MAX_INT   = <span class="hljs-number">-1</span> &gt;&gt;&gt; <span class="hljs-number">1</span>
     ,   INT3BYTES = <span class="hljs-number">0xFFFFFF</span>
     ,   INT_SIGN_BIT = MAX_INT + <span class="hljs-number">1</span>
 
@@ -81,14 +95,14 @@
     ,   proc = <span class="hljs-keyword">typeof</span> process !== <span class="hljs-string">'undefined'</span> &amp;&amp; process.hrtime ? process : <span class="hljs-literal">null</span>
     ,   now      = ! perf
                     ? <span class="hljs-keyword">typeof</span> <span class="hljs-built_in">Date</span>.now !== FUNCTION
-                        ? <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> (<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>).getTime() }
-                        : <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-built_in">Date</span>.now() }
-                    : <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> perf.now() }
+                        ? <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> (<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>()).getTime(); }
+                        : <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-built_in">Date</span>.now(); }
+                    : <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> perf.now(); }
     ,   micronow = ! proc
                     ? ! perf
                         ? <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> now() % <span class="hljs-number">1e3</span>; }
                         : <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> ((perf.now() * <span class="hljs-number">1e3</span>)|<span class="hljs-number">0</span>) % <span class="hljs-number">1e6</span>; }
-                    : <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> process.hrtime()[<span class="hljs-number">1</span>] }
+                    : <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> process.hrtime()[<span class="hljs-number">1</span>]; }
 
     ,   hrtime = proc
                     ? <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x</span>) </span>{ <span class="hljs-keyword">return</span> x ? process.hrtime(x) : process.hrtime(); }
@@ -104,38 +118,7 @@
                         <span class="hljs-keyword">return</span> r;
                     }
 
-    ,   start_hr = hrtime()
-
-    ,   start_ts = now()
-
-    ,   crypto = isNode ? <span class="hljs-built_in">require</span>(<span class="hljs-string">'crypto'</span>) : root.crypto
-    ;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-3">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
-              </div>
-              <h2 id="-">————————————————-</h2>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    (<span class="hljs-keyword">typeof</span> define == FUNCTION &amp;&amp; define.amd
-        ? define <span class="hljs-comment">// AMD</span>
-        : (<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">require</span>) </span>{
-            <span class="hljs-keyword">return</span> <span class="hljs-keyword">typeof</span> <span class="hljs-built_in">module</span> != UNDEFINED &amp;&amp; <span class="hljs-built_in">module</span>.exports
-                ? <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">deps, factory</span>) </span>{ <span class="hljs-built_in">module</span>.exports = factory(<span class="hljs-built_in">require</span>, <span class="hljs-built_in">module</span>); }              <span class="hljs-comment">// CommonJs</span>
-                : <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">deps, factory</span>) </span>{ root[name] = factory(<span class="hljs-built_in">require</span><span class="hljs-comment">/*, module == undefined*/</span>); } <span class="hljs-comment">// Browser</span>
-        }
-        (<span class="hljs-keyword">typeof</span> <span class="hljs-built_in">require</span> == FUNCTION ? <span class="hljs-built_in">require</span> : <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">id</span>)</span>{<span class="hljs-keyword">return</span> root[id.split(<span class="hljs-string">'/'</span>).pop()]}))
-    )
-    <span class="hljs-comment">/*define*/</span>(
-        [<span class="hljs-string">'require'</span>, <span class="hljs-string">'module'</span>, <span class="hljs-string">'./lib/sha1'</span>, <span class="hljs-string">'./lib/sha256'</span>, <span class="hljs-string">'./lib/base64'</span>]
-        , <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">factory</span>(<span class="hljs-params">require, module, sha1, sha256, base64</span>) </span>{</pre></div></div>
+    ,   start_hr = hrtime()</pre></div></div>
             
         </li>
         
@@ -146,8 +129,89 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
+              <p>,   start_ts = now()</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+    ,   crypto = isNode ? <span class="hljs-built_in">require</span>(<span class="hljs-string">'crypto'</span>) : root.crypto
+    ;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
               <hr>
 
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <hr>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    (<span class="hljs-keyword">typeof</span> define == FUNCTION &amp;&amp; define.amd
+        ? define <span class="hljs-comment">// AMD</span>
+        : (<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">require</span>) </span>{
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">typeof</span> <span class="hljs-built_in">module</span> != UNDEFINED &amp;&amp; <span class="hljs-built_in">module</span>.exports
+                ? <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">deps, factory</span>) </span>{ <span class="hljs-built_in">module</span>.exports = factory(<span class="hljs-built_in">require</span>, <span class="hljs-built_in">module</span>); }              <span class="hljs-comment">// CommonJs</span>
+                : <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">deps, factory</span>) </span>{ root[name] = factory(<span class="hljs-built_in">require</span><span class="hljs-comment">/*, module == undefined*/</span>); } <span class="hljs-comment">// Browser</span>
+            ;
+        }
+        (<span class="hljs-keyword">typeof</span> <span class="hljs-built_in">require</span> == FUNCTION ? <span class="hljs-built_in">require</span> : <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">id</span>)</span>{<span class="hljs-keyword">return</span> root[id.split(<span class="hljs-string">'/'</span>).pop()];}))
+    )
+    <span class="hljs-comment">/*define*/</span>(
+        [<span class="hljs-string">'require'</span>, <span class="hljs-string">'module'</span>, <span class="hljs-string">'./lib/sha1'</span>, <span class="hljs-string">'./lib/sha256'</span>, <span class="hljs-string">'./lib/base64'</span>]
+        , <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">factory</span>(<span class="hljs-params">require, module, sha1, sha256, base64</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <hr>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              
             </div>
             
             <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span>(!sha1)   sha1   = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./lib/sha1'</span>);
@@ -159,11 +223,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>Private primitive hash function</p>
 
@@ -179,11 +243,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>Private</p>
 
@@ -208,14 +272,26 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <hr>
-<p>Private Methods</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Private Methods</p>
 
             </div>
             
@@ -224,15 +300,15 @@
                         <span class="hljs-keyword">var</span> l = <span class="hljs-built_in">String</span>(key).length;
                         <span class="hljs-keyword">if</span>(size &lt; l) {
                             key = sha1(key);
-                            <span class="hljs-keyword">if</span>(key === FALSE) <span class="hljs-keyword">return</span> key;
+                            <span class="hljs-keyword">if</span>(key === <span class="hljs-literal">false</span>) <span class="hljs-keyword">return</span> key;
                             key = hex2bin(key);
-                            l = strlen($key);
+                            l = key.length;
                         }
                         <span class="hljs-keyword">if</span>(l &lt; size) {
                             key = str_pad(key, size, chr(<span class="hljs-number">0</span>), <span class="hljs-literal">false</span>);
                         }
                         <span class="hljs-keyword">else</span> {
-                            key = key + substr(<span class="hljs-number">0</span>, -<span class="hljs-number">1</span>) + chr(<span class="hljs-number">0</span>);
+                            key = key.slice(<span class="hljs-number">0</span>, <span class="hljs-number">-1</span>) + chr(<span class="hljs-number">0</span>);
                         }
 
                         _opad = strxor(str_repeat(chr(<span class="hljs-number">0x5C</span>), size), key);
@@ -241,18 +317,18 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>Empty the buffer</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>                        _l = <span class="hljs-number">0</span>;
-                    }
+                    };
 
                     _self.seed = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">seed</span>(<span class="hljs-params">_seed</span>) </span>{
                         <span class="hljs-keyword">var</span> ret = _self.state()
@@ -264,7 +340,7 @@
                         _b = ret;
                         _l = ret.length;
                         <span class="hljs-keyword">return</span> ret;
-                    }
+                    };
 
                     _self.state = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">state</span>(<span class="hljs-params"></span>) </span>{
                         <span class="hljs-keyword">if</span> ( _state == <span class="hljs-literal">undefined</span> ) {</pre></div></div>
@@ -272,11 +348,11 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>@TODO</p>
 
@@ -285,11 +361,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p>Seed the state</p>
 
@@ -300,7 +376,7 @@
                           _state = seed;
                         }
                         <span class="hljs-keyword">return</span> _state;
-                    }
+                    };
 
                     <span class="hljs-comment">/**
                      *  Return a random binary string of specified length.
@@ -311,11 +387,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>If buffer is empty, fill it</p>
 
@@ -329,11 +405,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>If we have to return exactly what is in the buffer, return quickly</p>
 
@@ -344,11 +420,11 @@
         </li>
         
         
-        <li id="section-13">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>remove used data from buffer to avoid reusing it</p>
 
@@ -359,11 +435,11 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>empty the buffer</p>
 
@@ -379,11 +455,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>If we need more data than we have in the buffer, generate some more</p>
 
@@ -394,11 +470,11 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>remove used data from buffer to avoid reusing it</p>
 
@@ -416,11 +492,11 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>If buffer has more data then we need</p>
 
@@ -431,11 +507,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>how much data we don’t need from buffer ?</p>
 
@@ -446,11 +522,11 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>get only that much we need from buffer and leave the rest for others</p>
 
@@ -462,11 +538,11 @@
         </li>
         
         
-        <li id="section-20">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>else buffer has exactly how much data we need - grab it all</p>
 
@@ -478,11 +554,11 @@
         </li>
         
         
-        <li id="section-21">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>empty the buffer</p>
 
@@ -492,16 +568,16 @@
                             _l = <span class="hljs-number">0</span>;
                         }
                         <span class="hljs-keyword">return</span> ret;
-                    }</pre></div></div>
+                    };</pre></div></div>
             
         </li>
         
         
-        <li id="section-22">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>Strong hash function, HMAC</p>
 
@@ -512,24 +588,36 @@
                         str = _ipad + str;
                         <span class="hljs-keyword">var</span> ret = _hash(_opad + _hash(_ipad + str, <span class="hljs-literal">true</span>), raw);
                         <span class="hljs-keyword">return</span> ret;
-                    }</pre></div></div>
+                    };</pre></div></div>
             
         </li>
         
         
-        <li id="section-23">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <hr>
-<p>__construct()</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>__construct()</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">if</span> ( secret == <span class="hljs-literal">undefined</span> ) {
-                        secret = <span class="hljs-string">'!8L_JlACt:5!R9}~&gt;yb!gPP=|(ao/&amp;-Z'</span>;
+                        secret = <span class="hljs-string">'!8L_JlACt:5!R9}~&gt;yb!gPP=|(ao/&amp;-Z'</span> + version;
                     }
 
                     _self.setSecret(secret);
@@ -543,14 +631,26 @@
         </li>
         
         
-        <li id="section-24">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <hr>
-<p>Static</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>Static</p>
 
             </div>
             
@@ -561,11 +661,11 @@
         </li>
         
         
-        <li id="section-25">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>/ Get the singleton instance</p>
 
@@ -576,20 +676,35 @@
                 <span class="hljs-keyword">if</span>(!_instance) {
                     _instance = <span class="hljs-keyword">new</span> P2PEG(secret);
                 }
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ( secret ) {
+                    _instance.setSecret(secret);
+                }
                 <span class="hljs-keyword">return</span> _instance;
-            }</pre></div></div>
+            };</pre></div></div>
             
         </li>
         
         
-        <li id="section-26">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <hr>
 
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              
             </div>
             
             <div class="content"><div class='highlight'><pre>            proto.constructor = P2PEG;
@@ -602,14 +717,26 @@
         </li>
         
         
-        <li id="section-27">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <hr>
 
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              
             </div>
             
             <div class="content"><div class='highlight'><pre>            proto.toString = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">toString</span>(<span class="hljs-params">mode</span>) </span>{
@@ -632,14 +759,26 @@
         </li>
         
         
-        <li id="section-28">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <hr>
 
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              
             </div>
             
             <div class="content"><div class='highlight'><pre>
@@ -655,7 +794,7 @@
                     ? ret
                     : ret.substr(<span class="hljs-number">0</span>, len)
                 ;
-            }
+            };
 
             <span class="hljs-comment">/**
              *  Base64 encoded text for URL
@@ -666,7 +805,7 @@
                 ;
                 <span class="hljs-keyword">if</span>(len != <span class="hljs-literal">undefined</span> &amp;&amp; ret.length &gt; len) ret = ret.substr(<span class="hljs-number">0</span>, len);
                 <span class="hljs-keyword">return</span> ret;
-            }
+            };
 
             <span class="hljs-comment">/**
              *  Return a random 16 bit integer.
@@ -675,7 +814,7 @@
              */</span>
             proto.int16 = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">int16</span>(<span class="hljs-params"></span>) </span>{
                 <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.int(<span class="hljs-number">2</span>);
-            }
+            };
 
             <span class="hljs-comment">/**
              *  Return a random 32 bit integer.
@@ -684,7 +823,7 @@
              */</span>
             proto.int32 = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">int32</span>(<span class="hljs-params"></span>) </span>{
                 <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.int(<span class="hljs-number">4</span>);
-            }
+            };
 
             <span class="hljs-comment">/**
              *  Return a random integer.
@@ -704,19 +843,31 @@
                 ;
                 <span class="hljs-keyword">for</span>(;s--;) r = (r &lt;&lt; <span class="hljs-number">8</span>) | src.charCodeAt(s);
                 <span class="hljs-keyword">return</span> r;
-            }</pre></div></div>
+            };</pre></div></div>
             
         </li>
         
         
-        <li id="section-29">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <hr>
 
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              
             </div>
             
             <div class="content"><div class='highlight'><pre>            <span class="hljs-comment">/**
@@ -733,11 +884,11 @@
         </li>
         
         
-        <li id="section-30">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p>System performance/load indicator</p>
 
@@ -761,7 +912,7 @@
 
                 <span class="hljs-keyword">if</span> ( _entr == <span class="hljs-literal">undefined</span> ) {
                     <span class="hljs-keyword">var</span> _el = <span class="hljs-number">0</span>, t, s;
-                    _entr = {}
+                    _entr = {};
 
                     _entr[packFloat(start_hr.join(<span class="hljs-string">'.'</span>))] = <span class="hljs-string">'start'</span>;
                     _entr[packIP4(version)] = <span class="hljs-string">'ver'</span>;
@@ -784,7 +935,7 @@
                     }
 
                     <span class="hljs-keyword">if</span> ( s = root.screen ) {
-                        each(s, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">i,p</span>) </span>{ _entr[p||i] = _el });
+                        each(s, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">i,p</span>) </span>{ _entr[p||i] = _el; });
                     }
 
                     <span class="hljs-keyword">if</span> ( s = root.document ) {
@@ -797,11 +948,11 @@
         </li>
         
         
-        <li id="section-31">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <p>_entr might containt sensitive data (ex. cookie)
 hash it before using as entropy</p>
@@ -811,7 +962,7 @@ hash it before using as entropy</p>
             <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">if</span> ( _el ) {
                         _entr[packFloat(hrtime(start_hr).join(<span class="hljs-string">'.'</span>))] = <span class="hljs-number">1</span>; <span class="hljs-comment">// some randomness</span>
                         _el = _self.hash(keys(_entr).join(<span class="hljs-string">''</span>), <span class="hljs-literal">true</span>); <span class="hljs-comment">// HMAC with secret</span>
-                        _entr = {}
+                        _entr = {};
                         _entr[_el] = <span class="hljs-string">'client'</span>;
                         _el = <span class="hljs-number">1</span>;
                     }
@@ -832,11 +983,11 @@ hash it before using as entropy</p>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p>if ( t = getlastmod() ) _entr[packInt(t)] = ‘lastmod’;</p>
 
@@ -848,11 +999,11 @@ hash it before using as entropy</p>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <p>Node</p>
 
@@ -865,11 +1016,11 @@ hash it before using as entropy</p>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <p>Web API</p>
 
@@ -886,11 +1037,11 @@ hash it before using as entropy</p>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
               <p>P2PEG.debug(serverEntropy.name, bin2hex(_entr));</p>
 
@@ -905,14 +1056,26 @@ hash it before using as entropy</p>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <hr>
 
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              
             </div>
             
             <div class="content"><div class='highlight'><pre>            proto.clientEntropy = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">clientEntropy</span>(<span class="hljs-params"></span>) </span>{</pre></div></div>
@@ -920,11 +1083,11 @@ hash it before using as entropy</p>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <p>??? @TODO</p>
 
@@ -936,14 +1099,26 @@ hash it before using as entropy</p>
         </li>
         
         
-        <li id="section-38">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <hr>
 
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-52">&#182;</a>
+              </div>
+              
             </div>
             
             <div class="content"><div class='highlight'><pre>            <span class="hljs-comment">/**
@@ -953,6 +1128,8 @@ hash it before using as entropy</p>
              *  but is much faster at generating long strings of random numbers.
              *
              *  @source http://en.wikipedia.org/wiki/Random_number_generation
+             *
+             *  @return int32 [-0x80000000..0x7FFFFFFF]
              */</span>
             proto.rand32 = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">rand32</span>(<span class="hljs-params"></span>) </span>{
                 <span class="hljs-keyword">var</span> _self = <span class="hljs-keyword">this</span>
@@ -963,11 +1140,11 @@ hash it before using as entropy</p>
         </li>
         
         
-        <li id="section-39">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
               <p>Seed if necessary</p>
 
@@ -980,11 +1157,11 @@ hash it before using as entropy</p>
         </li>
         
         
-        <li id="section-40">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
               <p>rs_w = (now()*Math.random())&gt;&gt;&gt;0; // alternative</p>
 
@@ -998,11 +1175,11 @@ hash it before using as entropy</p>
         </li>
         
         
-        <li id="section-41">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <p>rs_z = (now()*Math.random())&gt;&gt;&gt;0; // alternative</p>
 
@@ -1012,7 +1189,6 @@ hash it before using as entropy</p>
 
                 rs_z = <span class="hljs-number">36969</span> * (rs_z &amp; <span class="hljs-number">0xFFFF</span>) + (rs_z &gt;&gt; <span class="hljs-number">16</span>);
                 rs_w = <span class="hljs-number">18000</span> * (rs_w &amp; <span class="hljs-number">0xFFFF</span>) + (rs_w &gt;&gt; <span class="hljs-number">16</span>);
-                <span class="hljs-keyword">var</span> ret = (rs_z &lt;&lt; <span class="hljs-number">16</span>) + rs_w;  <span class="hljs-comment">/* 32-bit result */</span>
 
                 _self.rs_w = rs_w;
                 _self.rs_z = rs_z;</pre></div></div>
@@ -1020,54 +1196,64 @@ hash it before using as entropy</p>
         </li>
         
         
-        <li id="section-42">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <p>handle overflow:
-in JS at overflow (int32) -&gt; (float)</p>
+in JS at overflow (int32) -&gt; (float), so use “|” rather then “+”</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">return</span> ret | <span class="hljs-number">0</span>;
-            }
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">var</span> ret = (rs_z &lt;&lt; <span class="hljs-number">16</span>) | rs_w;  <span class="hljs-comment">/* 32-bit result */</span>
+                <span class="hljs-keyword">return</span> ret;
+            };
+
+            <span class="hljs-comment">/**
+             *  A substitution for Math.random().
+             *
+             *  @return double from interval [0..1)
+             */</span>
+            proto.random = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">random</span>(<span class="hljs-params"></span>) </span>{
+                <span class="hljs-keyword">return</span> (<span class="hljs-number">1</span> + <span class="hljs-keyword">this</span>.rand32() / (MAX_INT+<span class="hljs-number">1</span>)) / <span class="hljs-number">2</span>;
+            };
 
             proto.saveState = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">saveState</span>(<span class="hljs-params">sf</span>) </span>{</pre></div></div>
             
         </li>
         
         
-        <li id="section-43">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <p>@TODO: save to fs or localStorage</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            }
+            <div class="content"><div class='highlight'><pre>            };
 
             proto.isServer = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isServer</span>(<span class="hljs-params"></span>) </span>{</pre></div></div>
             
         </li>
         
         
-        <li id="section-44">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
               <p>@TODO: There might be other server environments besides node.js</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">return</span> isNode;
-            }
+            };
 
             proto.seedSys = <span class="hljs-literal">true</span>;
             proto.rs_z = <span class="hljs-number">0</span>;
@@ -1076,14 +1262,26 @@ in JS at overflow (int32) -&gt; (float)</p>
         </li>
         
         
-        <li id="section-45">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <hr>
-<p>Helpers:</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-60">&#182;</a>
+              </div>
+              <p>Helpers:</p>
 
             </div>
             
@@ -1095,16 +1293,16 @@ in JS at overflow (int32) -&gt; (float)</p>
             <span class="hljs-keyword">var</span> ceil  = <span class="hljs-built_in">Math</span>.ceil;
 
             <span class="hljs-keyword">var</span> chr = <span class="hljs-built_in">String</span>.fromCharCode;
-            <span class="hljs-keyword">var</span> arr2str = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">arr</span>) </span>{ <span class="hljs-keyword">return</span> chr.apply(<span class="hljs-built_in">String</span>, arr); }</pre></div></div>
+            <span class="hljs-keyword">var</span> arr2str = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">arr</span>) </span>{ <span class="hljs-keyword">return</span> chr.apply(<span class="hljs-built_in">String</span>, arr); };</pre></div></div>
             
         </li>
         
         
-        <li id="section-46">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <p>Be polite, if possible</p>
 
@@ -1130,31 +1328,31 @@ in JS at overflow (int32) -&gt; (float)</p>
         </li>
         
         
-        <li id="section-47">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <p>Warning: IE hasDontEnumBug - not implemented!</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>                }
-                <span class="hljs-keyword">return</span> o
+                <span class="hljs-keyword">return</span> o;
             } ;
 
             <span class="hljs-keyword">var</span> isEmpty = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isEmpty</span>(<span class="hljs-params">obj</span>) </span>{
                 <span class="hljs-keyword">var</span> ret = <span class="hljs-literal">true</span>;
-                each(obj, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> ret = <span class="hljs-literal">false</span> });
-                <span class="hljs-keyword">return</span> ret
+                each(obj, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> ret = <span class="hljs-literal">false</span>; });
+                <span class="hljs-keyword">return</span> ret;
             } ;
 
             <span class="hljs-keyword">var</span> keys = <span class="hljs-built_in">Object</span>.keys;
             <span class="hljs-keyword">if</span> ( <span class="hljs-keyword">typeof</span> keys !== FUNCTION ) {
                 keys = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">keys</span>(<span class="hljs-params">o</span>) </span>{
                     <span class="hljs-keyword">var</span> ret = [];
-                    each(o, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">k,v</span>) </span>{ ret.push(k); });
+                    each(o, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">k</span>) </span>{ ret.push(k); });
                     <span class="hljs-keyword">return</span> ret;
                 };
             }
@@ -1173,12 +1371,12 @@ in JS at overflow (int32) -&gt; (float)</p>
                     <span class="hljs-keyword">if</span>(left) {
                         <span class="hljs-keyword">while</span>(i--) t = s + t;
                         i = t.length;
-                        t = n &lt; i ? t.substr(i-n) : _(t)
+                        t = n &lt; i ? t.substr(i-n) : <span class="hljs-built_in">String</span>(t);
                     }
                     <span class="hljs-keyword">else</span> {
                         <span class="hljs-keyword">while</span>(i--) t += s;
                         i = t.length;
-                        t = n &lt; i ? t.substr(<span class="hljs-number">0</span>, n) : _(t)
+                        t = n &lt; i ? t.substr(<span class="hljs-number">0</span>, n) : <span class="hljs-built_in">String</span>(t);
                     }
                 }
                 <span class="hljs-keyword">return</span> t;
@@ -1187,11 +1385,11 @@ in JS at overflow (int32) -&gt; (float)</p>
         </li>
         
         
-        <li id="section-48">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <p>/ Returns hex representation of the string
 / If this is UTF8, it gets converted</p>
@@ -1210,11 +1408,11 @@ in JS at overflow (int32) -&gt; (float)</p>
         </li>
         
         
-        <li id="section-49">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <p>if(encodeUtf8 &amp;&amp; c &gt; 0xFF) return hex.call(s.utf8Encode()); //??? todo</p>
 
@@ -1224,16 +1422,16 @@ in JS at overflow (int32) -&gt; (float)</p>
                     ret += c.toString(<span class="hljs-number">16</span>);
                 }
                 <span class="hljs-keyword">return</span> ret;
-            }</pre></div></div>
+            };</pre></div></div>
             
         </li>
         
         
-        <li id="section-50">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
               <p>/ Converts a string of HEX digits (0-f) to its binary string representation</p>
 
@@ -1321,11 +1519,11 @@ in JS at overflow (int32) -&gt; (float)</p>
         </li>
         
         
-        <li id="section-51">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
               <p>When $int is bigger then int32, shift cuts out some bits.
 Split the number into 3 pieces of 24 bits (Number is a 53 bit precision double)</p>
@@ -1338,7 +1536,7 @@ Split the number into 3 pieces of 24 bits (Number is a 53 bit precision double)<
                             packInt(($int / (INT3BYTES+<span class="hljs-number">1</span>))|<span class="hljs-number">0</span>) ;
                 }
 
-                <span class="hljs-keyword">var</span> m = $int &lt; <span class="hljs-number">0</span> ? -<span class="hljs-number">1</span> : <span class="hljs-number">0</span>;
+                <span class="hljs-keyword">var</span> m = $int &lt; <span class="hljs-number">0</span> ? <span class="hljs-number">-1</span> : <span class="hljs-number">0</span>;
                 <span class="hljs-keyword">while</span>($int != m) {
                     r.push($int &amp; <span class="hljs-number">0xFF</span>);
                     $int &gt;&gt;= <span class="hljs-number">8</span>;
@@ -1357,14 +1555,26 @@ Split the number into 3 pieces of 24 bits (Number is a 53 bit precision double)<
         </li>
         
         
-        <li id="section-52">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
               <hr>
-<p>Export as static methods:</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-68">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-68">&#182;</a>
+              </div>
+              <p>Export as static methods:</p>
 
             </div>
             
@@ -1386,11 +1596,11 @@ Split the number into 3 pieces of 24 bits (Number is a 53 bit precision double)<
         </li>
         
         
-        <li id="section-53">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
               <p>Export constants:</p>
 
@@ -1408,14 +1618,26 @@ Split the number into 3 pieces of 24 bits (Number is a 53 bit precision double)<
         </li>
         
         
-        <li id="section-54">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
               <hr>
 
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-71">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-71">&#182;</a>
+              </div>
+              
             </div>
             
             <div class="content"><div class='highlight'><pre>}
