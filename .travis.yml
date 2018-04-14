@@ -1,4 +1,5 @@
 language: node_js
+
 node_js:
 - "stable"
 - '9.0'
@@ -10,10 +11,15 @@ node_js:
 - '0.12'
 
 matrix:
+    fast_finish: true
+    include:
+        - node_js: stable
+          env: COMMAND=test-browser
     allow_failures:
         - node_js: '0.12'
 
 sudo: required
+
 dist: trusty
 
 cache:
@@ -33,11 +39,15 @@ before_install:
   - sh -e /etc/init.d/xvfb start
   - sleep 3
 
-script: npm run $COMMAND
+script: npm run ${COMMAND:-"test-node"}
+
 env:
-  matrix:
   - COMMAND=test-node
-  - COMMAND=test-browser
+
+# env:
+#   matrix:
+#   - COMMAND=test-node
+#   - COMMAND=test-browser
 
 deploy:
   provider: npm
