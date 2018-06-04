@@ -9,7 +9,7 @@
  *  @requires sha1, sha256, base64
  *
  *  @license MIT
- *  @version 0.3.6
+ *  @version 0.3.7
  *  @author Dumitru Uzun (DUzun.Me)
  */
 
@@ -22,7 +22,7 @@
     ,   UNDEFINED = undefined + ''
     ,   hop = Object.prototype.hasOwnProperty
 
-    ,   version   = '0.3.6'
+    ,   version   = '0.3.7'
 
     ,   INT_SIZE  = 4 // JS can handle only 32bit integers == 4 bytes
     ,   INT_LEN   = Math.round(INT_SIZE * Math.log(256) / Math.log(10))
@@ -474,16 +474,22 @@
                 ,   rs_z = _self.rs_z
                 ;
 
+                if ( _self._rsi && _self._rsc > _self._rsi ) {
+                    rs_w = rs_z = 0;
+                }
+
                 // Seed if necessary
                 while(!rs_w || rs_w == 0x464fffff) {
                     /* must not be zero, nor 0x464fffff */
                     rs_w = _self.int32() ^ _self.int32();
                     // rs_w = (now()*Math.random())>>>0; // alternative
+                    _self._rsc = 0;
                 }
                 while(!rs_z || rs_z == 0x9068ffff) {
                     /* must not be zero, nor 0x9068ffff */
                     rs_z = _self.int32() ^ _self.int32();
                     // rs_z = (now()*Math.random())>>>0; // alternative
+                    _self._rsc = 0;
                 }
 
                 rs_z = 36969 * (rs_z & 0xFFFF) + (rs_z >> 16);
@@ -491,11 +497,12 @@
 
                 _self.rs_w = rs_w;
                 _self.rs_z = rs_z;
+                ++_self._rsc;
 
                 // handle overflow:
-                // in JS at overflow (int32) -> (float), so use "|" rather then "+"
-                var ret = (rs_z << 16) | rs_w;  /* 32-bit result */
-                return ret;
+                var ret = (rs_z << 16) + rs_w;  /* 32-bit result */
+                // in JS at overflow (int32) -> (float), so use "| 0" to make sure it is int
+                return ret | 0;
             };
 
             /**
@@ -519,6 +526,8 @@
             proto.seedSys = true;
             proto.rs_z = 0;
             proto.rs_w = 0;
+            proto._rsc = 0; // reseed counter
+            proto._rsi = 511*256; // reseed interval
 
             // -------------------------------------------------
             // Helpers:
@@ -645,11 +654,11 @@
                 if(m != n) {
                     if(!m || !n) return a + b;
                     if(n < m) {
-                        b = str_repeat(b, floor(m / n)) . b.substr(0, m % n);
+                        b = str_repeat(b, floor(m / n)) + b.substr(0, m % n);
                         n = m;
                     }
                     else {
-                        a = str_repeat(a, floor(n / m)) . a.substr(0, n % m);
+                        a = str_repeat(a, floor(n / m)) + a.substr(0, n % m);
                     }
                 }
                 for(m=0;m<n;m++) ret[m] = a.charCodeAt(m) ^ b.charCodeAt(m);

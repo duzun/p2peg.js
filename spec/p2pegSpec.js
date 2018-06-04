@@ -52,9 +52,9 @@
             err && console.error(err);
             expect(digest).toBe(dgst);
             done();
-        })
+        });
       });
-    })
+    });
 
     describe("P2PEG class: ", function () {
         it('should have version property', function () {
@@ -95,6 +95,29 @@
         it('should have text2bin(text)', function () {
             expect(typeof cons.text2bin).toBe('function');
         });
+    });
+
+    describe('P2PEG.strxor(str1, str2)', function () {
+      it('should combine two strings of the same length', function () {
+          var str1 = 'P2PEG.strxor(str1, str2);';
+          var str2 = ';)2rts ,1rts(roxrts.GEP2P';
+          var strx = P2PEG.strxor(str1, str2);
+
+          expect(strx).not.toEqual(str1);
+          expect(strx).not.toEqual(str2);
+          expect(strx.length).toEqual(str2.length);
+      });
+
+      it('should combine two strings of different lengths', function () {
+          var str1 = 'P2PEG.strxor(str1, str2);';
+          var str2 = 'expect(strx).not.toEqual(str1);expect(strx.length).toEqual(str2.length);';
+          var strx = P2PEG.strxor(str1, str2);
+
+          expect(strx).not.toEqual(str1);
+          expect(strx).not.toEqual(str2);
+          expect(strx.length).toEqual(Math.max(str1.length, str2.length));
+          expect(P2PEG.strxor(strx, str2)).not.toEqual(str1);
+      });
     });
 
     describe('chr(byte)', function () {
