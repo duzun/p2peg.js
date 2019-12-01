@@ -17,6 +17,8 @@ matrix:
     include:
         - node_js: stable
           env: COMMAND=test-browser
+        - node_js: stable
+          env: COMMAND=jest:cov
     allow_failures:
         - node_js: '7.0'
         - node_js: '6.0'
@@ -44,6 +46,9 @@ before_install:
   - sh -e /etc/init.d/xvfb start
   - sleep 3
 
+after_script:
+  - npx codecov
+
 script: npm run ${COMMAND:-"test-node"}
 
 env:
@@ -61,4 +66,4 @@ deploy:
     secure: UeTmKdjg0MEmy8iK0ZmlmNww+hytHQoEkh7uhssV2Pizq2sSEKki9m64v7xe35Kwk38TcbMvrZkwtim/ZnZt1JJ2LOw8Ogz88OVviqAfkHOe2VRH8SrP3NpRFGFWLZ0JmvKGkvCLiDkLHiz+vSegUXDPwyGdpS932lyxJ5U3ntE=
   on:
     tags: true
-    repo: duzun/p2peg
+    repo: duzun/p2peg.js

@@ -1,4 +1,5 @@
 /node_modules/
+/coverage/
 /spec/
 /docs/
 
@@ -7,6 +8,7 @@ style.css
 
 .editorconfig
 .travis.yml
+.directory
 
 build.js
 

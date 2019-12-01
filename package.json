@@ -55,6 +55,7 @@
     "test-node": "jasmine-node spec",
     "test:watch": "karma start ./spec/karma.conf.js",
     "jest": "npx jest --runInBand",
+    "jest:cov": "npx jest --runInBand --forceExit --coverage",
     "jest:watch": "npx jest --runInBand --watch",
     "verup": "verup",
     "build": "node build.js",
