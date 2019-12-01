@@ -23,7 +23,7 @@ module.exports = function(config) {
 
       {pattern: 'lib/*.js', included: false},
       {pattern: 'p2peg.js', included: false},
-      {pattern: 'spec/*Spec.js', included: false},
+      {pattern: 'spec/*.spec.js', included: false},
       'spec/test-main.js'
     ],
 

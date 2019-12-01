@@ -484,8 +484,7 @@
         // });
 
         it('should return a number from interval [0..1)', function () {
-            var e;
-            expect(r.every(function (n) { e = n; return 0 <= n && n < 1; })).toBeTruthy(e);
+            expect(r.every(function (n) { return 0 <= n && n < 1; })).toBeTruthy();
         });
 
         it('should not return same value with a probability of 99.9%', function () {
