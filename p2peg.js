@@ -6,10 +6,10 @@
  *  *  clb: http://jsonlib.appspot.com/urandom?callback=p2peg.seed
  *  *  XHR: https://www.random.org/integers/?num=256&min=0&max=255&col=1&base=16&format=plain&rnd=new
  *
- *  @requires sha1, sha256, base64
+ *  @requires sha256, base64
  *
  *  @license MIT
- *  @version 0.3.7
+ *  @version 0.3.8
  *  @author Dumitru Uzun (DUzun.Me)
  */
 
@@ -22,7 +22,7 @@
     ,   UNDEFINED = undefined + ''
     ,   hop = Object.prototype.hasOwnProperty
 
-    ,   version   = '0.3.7'
+    ,   version   = '0.3.8'
 
     ,   INT_SIZE  = 4 // JS can handle only 32bit integers == 4 bytes
     ,   INT_LEN   = Math.round(INT_SIZE * Math.log(256) / Math.log(10))
@@ -80,10 +80,9 @@
         (typeof require == FUNCTION ? require : function (id){return root[id.split('/').pop()];}))
     )
     /*define*/(
-        ['require', 'module', './lib/sha1', './lib/sha256', './lib/base64']
-        , function factory(require, module, sha1, sha256, base64) {
+        ['require', 'module', './lib/sha256', './lib/base64']
+        , function factory(require, module, sha256, base64) {
             // -------------------------------------------------
-            if(!sha1)   sha1   = require('./lib/sha1');
             if(!sha256) sha256 = require('./lib/sha256');
             if(!base64) base64 = require('./lib/base64');
 
@@ -119,9 +118,8 @@
                         var size = 64;
                         var l = String(key).length;
                         if(size < l) {
-                            key = sha1(key);
+                            key = strxorFold(key, size);
                             if(key === false) return key;
-                            key = hex2bin(key);
                             l = key.length;
                         }
                         if(l < size) {
@@ -663,6 +661,14 @@
                 }
                 for(m=0;m<n;m++) ret[m] = a.charCodeAt(m) ^ b.charCodeAt(m);
                 return arr2str(ret);
+            };
+
+            var strxorFold = function strxorFold(str, maxLength) {
+                var r = str.slice(0, maxLength);
+                for(var i=maxLength, l=str.length; i<l; i+=maxLength) {
+                    r = strxor(r, str.slice(i, i+maxLength));
+                }
+                return r;
             };
 
             var packIP4 = function packIP4(ip) {

@@ -8,6 +8,9 @@
  *
  */
 // -----------------------------------------------------
+/*globals describe, it, expect, console*/
+/*globals define, module, require*/
+// -----------------------------------------------------
 ;(function (name, root) {
   'use strict';
 
@@ -64,7 +67,7 @@
             expect(typeof cons.instance).toBe('function');
         });
         it(".instance(secret) should return an instance of P2PEG", function () {
-            inst = cons.instance('Unit test: instance()');
+            inst = cons.instance('Unit test: instance() ' + Array(64).join('~'));
             expect(inst instanceof cons).toBeTruthy();
             expect(inst.constructor).toBe(cons);
         });
