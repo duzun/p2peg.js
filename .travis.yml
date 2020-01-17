@@ -35,11 +35,7 @@ cache:
 
 addons:
   firefox: latest
-  apt:
-    sources:
-      - google-chrome
-    packages:
-      - google-chrome-stable
+  chrome: stable
 
 before_install:
   - export DISPLAY=:99.0
